@@ -1,0 +1,66 @@
+<ul>
+	{{#each $filteredCollections as collection}}
+		<li class="group-container">
+			<LinkGroup 
+				links="{{ collection.links }}" 
+				title="{{ collection.title }}" 
+				expanded="{{ collection.expanded }}"
+				:editing
+				on:link="store.updateLink(collection.id, event)"
+				on:title="store.updateTitle(collection.id, event)"
+				on:addlink="addLink(collection.id)"
+				on:deletelink="store.deleteLink(collection.id, event)"
+				on:deletegroup="store.deleteCollection(collection.id)"
+				on:expandGroup="store.expandCollection(collection.id, event)" />
+		</li>
+	{{/each}}
+</ul>
+<div class="action-buttons">
+<button on:click="addCollection()">Add Collection</button>
+{{#if !editing}}
+	<button on:click="set({editing:true})">Edit</button>
+{{else}}
+	<button on:click="set({editing:false})">Stop editing</button>
+{{/if}}
+</div>
+
+<style>
+	ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
+		grid-gap: var(--grid-gap);
+		margin-bottom: var(--grid-gap);
+	}
+
+	.action-buttons {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>
+
+<script>
+	import LinkGroup from './LinkGroup.html';
+	import store from './store';
+
+	export default {
+		store: () => store,
+		data() {
+			return {
+				editing: false,
+			}
+		},
+		components: {
+			LinkGroup,
+		},
+		methods: {
+			addLink(collectionId) {
+				this.store.addLink(collectionId);
+				this.set({editing:true});
+			}, 
+			addCollection() {
+				this.store.addCollection();
+				this.set({editing:true});
+			}
+		}
+	}
+</script>

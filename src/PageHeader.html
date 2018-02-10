@@ -1,0 +1,22 @@
+<header>
+	<h1 class="title">Link dump</h1>
+</header>
+
+<style>
+header {
+	grid-column: 1 / span 3;
+	display: grid;
+	grid-template-columns: var(--main-grid-columns);
+	grid-gap: var(--grid-gap);
+}
+
+header > * {
+	grid-column: 2;
+}
+
+.title {
+	font-size: 2rem;
+	text-align: center;
+	padding-top: var(--grid-gap);
+}
+</style>

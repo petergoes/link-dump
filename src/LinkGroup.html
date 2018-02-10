@@ -1,0 +1,188 @@
+<details ref:details open="{{ expanded }}">
+	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
+		<h2><span class="title">{{ title }}</span> {{#if editing}}<button on:click="editTitle()">Edit</button>{{/if}}</h2>
+	</summary>
+	<ul>
+		{{#each links as link @url}}
+			<li>
+				<Link 
+					:link
+					:editing
+					on:update="dispatchLink(event)"
+					on:delete="deleteLink(event)" />
+			</li>
+		{{/each}}
+	</ul>
+	<footer>
+		{{#if $searchValue === ''}}
+			<button on:click="fire('addlink')">Add Link</button>
+		{{/if}}
+	</footer>
+</details>
+<dialog ref:dialog>
+	<div class="dialog-content">
+		<label>
+			<div>Title</div>
+			<input ref:title value="{{ title }}"/>
+		</label>
+		<div class="dialog-buttons">
+			<button on:click="finishEditTitle()">Done</button>
+			<button on:click="deleteGroup(title)">Delete</button>
+		</div>
+	</div>
+</dialog>
+
+<style>
+	details {
+		display: grid;
+		grid-template-rows: min-content 1fr min-content;
+		height: 100%;
+	}
+	details summary:before {
+		content: "+";
+		padding-right: 0.5rem;
+	}
+	details[open] summary:before {
+		content: "-";
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+	summary:hover,
+	summary:active,
+	summary:focus {
+		outline-color: var(--code-keyword);
+		outline-width: 1px;
+		outline-style: solid;
+		outline-offset: 1px;
+	}
+
+
+	li {
+		z-index: 0;  /*set a base z-index for the contents of <Link> */
+		display: flex;
+		justify-content: space-between;
+	}
+
+	h2,
+	summary {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	summary {
+		margin-bottom: 0.5rem;
+	}
+
+	footer {
+		margin-top: 0.5rem;
+	}
+
+	.title {
+		margin-right: var(--grid-gap);
+		font-weight: 700;
+	}
+
+	dialog {
+		background-color: var(--code-background);
+		z-index: 1;
+		color: var(--code-text);
+		min-width: 50vw;
+		border: none;
+	}
+
+	.dialog-content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.dialog-content > * {
+		margin: 1rem 0;
+	}
+
+	dialog input {
+		background-color: var(--code-text);
+		color: var(--code-background);
+		width: calc(100% - 0.3rem - 2px);
+		margin-top: 0.25rem;
+		border: none;
+	}
+
+	dialog input:focus {
+		outline-color: var(--code-keyword);
+		outline-width: 1px;
+		outline-style: solid;
+		outline-offset: 1px;
+	}
+
+
+	dialog button {
+		background-color: var(--code-background);
+		border-color: var(--code-text);
+		color: var(--code-text);
+	}
+
+	dialog button:hover,
+	dialog button:focus,
+	dialog button:active {
+		border-color: var(--code-keyword);
+		color: var(--code-keyword);
+	}
+
+	.dialog-buttons {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.dialog-buttons > * {
+		margin-left: 1rem;
+	}
+</style>
+
+<script>
+	import Link from './Link.html';
+	import store from './store';
+
+	export default {
+		store: () => store,
+		oncreate() {
+			this.refs.details.addEventListener("toggle", () => {
+				this.fire('expandGroup', this.refs.details.open)
+			}, false);
+		},
+
+		data() {
+			return {
+				titleEditing: false
+			}
+		},
+		components: {
+			Link,
+		},
+		methods: {
+			dispatchLink(data) { this.fire('link', data); },
+			deleteLink(data) { 
+				if (window.confirm(`Do you want to delete this link?`)) { 
+					this.fire('deletelink', data)
+				}
+			},
+			editTitle() { 
+				this.set({titleEditing: true}); 
+				this.refs.dialog.showModal();
+				this.refs.title.focus();
+			},
+			finishEditTitle() {
+				this.fire('title', this.refs.title.value);
+				this.refs.dialog.close();
+				this.set({ titleEditing: false });
+			},
+			deleteGroup(title) {
+				if (window.confirm(`Do you want to delete ${title}?`)) {
+					this.fire('deletegroup');
+					this.set({ titleEditing: false });
+				}
+			},
+		}
+	}
+</script>

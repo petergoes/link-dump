@@ -1,0 +1,64 @@
+<footer>
+	<a href="https://petergoes.nl" class="page-footer__link">
+	<span class="page-footer__name"><span class="page-footer__code-decoration" aria-hidden="true" role="presentation" tabindex="-1">.</span>peter-goes</span> <span class="page-footer__code-decoration" aria-hidden="true" role="presentation">{</span> 
+		<span class="page-footer__occupation">
+			<span class="page-footer__property">frontEnd</span><span class="page-footer__code-decoration" aria-hidden="true" role="presentation">:</span> <span class="page-footer__property--value">developer</span><span class="page-footer__code-decoration" aria-hidden="true" role="presentation">;</span></span>
+		
+	<span class="page-footer__code-decoration" aria-hidden="true" role="presentation">}</span>
+</a>
+</footer>
+
+<style>
+footer {
+	grid-column: 1 / span 3;
+	display: grid;
+	grid-template-columns: var(--main-grid-columns);
+	grid-gap: var(--grid-gap);
+	background-color: var(--code-background);
+	color: var(--code-text);
+}
+
+footer > * {
+	grid-column: 2;
+}
+
+a {
+	padding: 1.5rem 0;
+	text-align: center;
+}
+
+a:before, a:after {
+	content: '';
+}
+a:hover, a:focus, a:active {
+	text-decoration: none;
+}
+
+.page-footer__link {
+	text-decoration: none;
+	color: var(--code-attribute);
+}
+
+.page-footer__link:hover,
+.page-footer__link:focus,
+.page-footer__link:active {
+	border-bottom: none;
+}
+
+.page-footer__link .page-footer__code-decoration {
+	opacity: 1;
+}
+
+.page-footer__name {
+	color: var(--code-selector);
+}
+
+.page-footer__property {
+	color: var(--code-property);
+}
+
+.page-footer__property--value {
+	color: var(--code-value);
+}
+
+</style>

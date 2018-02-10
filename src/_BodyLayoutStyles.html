@@ -1,0 +1,20 @@
+<slot></slot>
+
+<style>
+:global(:root) {
+	--main-grid-columns: 1fr minmax(min-content, 110ch) 1fr;
+	--main-grid-rows: max-content max-content 1fr max-content;
+}
+
+:global(body) {
+	display: grid;
+	grid-template-columns: var(--main-grid-columns);
+	grid-template-rows: var(--main-grid-rows);
+	grid-gap: var(--grid-gap);
+	min-height: 100vh;
+}
+
+:global(body > *) {
+	grid-column: 2;
+}
+</style>

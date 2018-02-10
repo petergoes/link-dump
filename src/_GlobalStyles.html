@@ -1,0 +1,206 @@
+<slot></slot>
+
+<style>
+:global(@font-face){
+    font-family: 'Fira Code';
+    src: url('/fonts/FiraCode-Regular.eot');
+    src: url('/fonts/FiraCode-Regular.eot') format('embedded-opentype'),
+         url('/fonts/FiraCode-Regular.woff2') format('woff2'),
+		 url('/fonts/FiraCode-Regular.woff') format('woff'),
+         url('/fonts/FiraCode-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+:global(@font-face){
+    font-family: 'Fira Code';
+    src: url('/fonts/FiraCode-Bold.eot');
+    src: url('/fonts/FiraCode-Bold.eot') format('embedded-opentype'),
+    	 url('/fonts/FiraCode-Bold.woff2') format('woff2'),
+		 url('/fonts/FiraCode-Bold.woff') format('woff'),
+         url('/fonts/FiraCode-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+:global(:root) {
+	--monospace-prefered: 'Fira Code', monospace;
+	--monospace: 'Fira Code', monospace;
+	--default-text-color: '';
+	--markdown-decoration-fade: 0.5;
+	--alert-fade: 50%;
+	--default-text-color: #444444;
+	--default-text-color-faded: rgba(68, 68, 68, 0.5);
+	--background-color: #FAFAFA;
+	--dark-background-text: #BED5DD;
+	--link-color: #1976D2;
+	--error-color: #F44336;
+	--success-color: #8BC34A;
+	--inline-code-color: #fa516d;
+
+	--code-background: #263238;
+	--code-comment: #61737e;
+	--code-selector: #FFD47E;
+	--code-property: #8FD2CE;
+	--code-value: #BED5DD;
+	--code-text: #DEE3E9;
+	--code-attribute: #98E3FF;
+	--code-element: #FA516D;
+	--code-string: #CAE69C;
+	--code-keyword: #c792ea;
+	--code-number: #f78556;
+	--code-regex: #69a5ff;
+
+	--grid-gap: 2rem;
+
+}
+
+:global(body) {
+	font-family: var(--monospace);
+	color: var(--default-text-color);
+	background-color: var(--background-color);
+	line-height: var(--line-height);
+
+}
+:global(h2, .h2) {
+	margin-top: calc(var(--line-height) * 2);
+}
+
+:global(h3, .h3) {
+	margin-top: var(--line-height);
+}
+
+:global(p) {
+	margin-bottom: var(--line-height);
+}
+
+:global(a) {
+	color: var(--link-color);
+	text-decoration: none;
+	outline: none;
+}
+:global(a h1:before, a h2:before, a h3:before, a h4:before, a h5:before, a h6:before) {
+	content: initial;
+	display: inline-block;
+}
+
+:global(a) {
+	border-bottom: 1px solid transparent;
+}
+
+:global(a:hover) {
+	border-bottom: 1px solid var(--link-color);	
+}
+
+:global(blockquote) {
+	border-left: 0.1875em solid var(--default-text-color-faded);
+	padding-left: calc(var(--char-width) + 0.1875em);
+	transform: translateX(calc(var(--char-width) - (0.1875em * 2))); 
+}
+
+:global(small) {
+	font-size: 0.75rem;
+}
+
+:global(button, input) {
+	border: 1px solid var(--default-text-color-faded);
+	background-color: transparent;
+	padding: 0.15rem;
+	font-family: var(--monospace-prefered);
+	font-size: 0.75rem;
+	transform: translateY(-2px);
+	line-height: 1;
+}
+
+:global(input) {
+	font-size: 1rem;
+}
+
+:global(button) {
+	cursor: pointer;
+}
+
+:global(button:hover, button:active, button:focus) {
+	outline: none;
+	background-color: var(--code-background);
+	color: var(--code-text);
+	border: 1px solid var(--code-background);
+}
+
+:global(pre code) {
+	width: 100%;
+	color: var(--background-color);
+	background-color: var(--code-background);
+	font-family: var(--monospace);
+	display: block;
+	border-radius: initial;
+}
+:global(pre code:before, pre code:after) {
+	content: initial;
+}
+
+:global(code) {
+	color: var(--inline-code-color);
+}
+:global(code:before) {
+	content: '`';
+	opacity: var(--markdown-decoration-fade);
+}
+
+:global(code:after) {
+	content: '`';
+	opacity: var(--markdown-decoration-fade);
+}
+
+:global(.fonts-loaded code) {
+	font-family: var(--monospace-prefered);
+}
+
+:global(h1) {
+	font-weight: 700;
+}
+
+:global(a:before) {
+	content: '[';
+	opacity: var(--markdown-decoration-fade);
+	color: var(--default-text-color);
+}
+:global(a:after) {
+	content: ']';
+	opacity: var(--markdown-decoration-fade);
+	color: var(--default-text-color);
+}
+
+:global(.headerlink:before, .headerlink:after) {
+	content: initial;
+}
+
+:global(strong:before, strong:after) {
+	content: '*';
+	opacity: var(--markdown-decoration-fade);
+	color: var(--default-text-color);
+}
+
+:global(em:before, i:before, em:after, i:after) {
+	content: '_';
+	opacity: var(--markdown-decoration-fade);
+	color: var(--default-text-color);
+}
+
+:global(ol) {
+	counter-reset:li; /* Initiate a counter */
+}
+:global(ol > li) {
+	position:relative; /* Create a positioning context */
+}
+:global(ol > li:before) {
+	content:counter(li) + '. '; /* Use the counter as content */
+	counter-increment:li; /* Increment the counter by 1 */
+}
+
+:global(ul, ol) {
+	list-style: none;
+	margin-bottom: var(--line-height);
+}
+
+</style>

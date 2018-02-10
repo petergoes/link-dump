@@ -1,0 +1,31 @@
+<section>
+	<input ref:input type="search" bind:value="$searchValue" />
+</section>
+
+<style>
+	section {
+		display: flex;
+		justify-content: center;
+	}
+	input {
+		width: 75%;
+	}
+
+	input:focus {
+		outline-color: var(--code-keyword);
+		outline-width: 1px;
+		outline-style: solid;
+		outline-offset: 1px;
+	}
+</style>
+
+<script>
+	import store from './store';
+
+	export default {
+		store: () => store,
+		oncreate() {
+			this.refs.input.focus();
+		}
+	};
+</script>
