@@ -18,8 +18,7 @@ class LinksStore extends Store {
 					id: Date.now(),
 					label: '',
 					url: '',
-					clicks: 0,
-					lastClicked: 0,
+					clicks: [],
 				})
 				return newCollection;
 			} else {
