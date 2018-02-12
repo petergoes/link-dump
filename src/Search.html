@@ -1,14 +1,28 @@
 <section>
-	<input ref:input type="search" bind:value="$searchValue" />
+	<input ref:inputSearch type="search" bind:value="$searchValue" placeholder="Search links" />
+	{{#if $searchValue === ''}}
+		<form action="https://duckduckgo.com/">
+			<input ref:inputWeb type="search" name="q" placeholder="Search DuckDuckGo" />
+		</form>
+	{{/if}}
 </section>
 
 <style>
 	section {
 		display: flex;
-		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 	}
-	input {
+	section > * {
 		width: 75%;
+	}
+	
+	form > input {
+		width: 100%;
+	}
+		
+	input:not(:last-child) {
+		margin-bottom: 1rem;
 	}
 
 	input:focus {
@@ -25,7 +39,7 @@
 	export default {
 		store: () => store,
 		oncreate() {
-			this.refs.input.focus();
+			this.refs.inputSearch.focus();
 		}
 	};
 </script>
