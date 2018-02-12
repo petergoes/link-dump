@@ -4,11 +4,11 @@
 			<LinkGroup 
 				links="{{ collection.links }}" 
 				title="{{ collection.title }}" 
+				id="{{ collection.id }}"
 				expanded="{{ collection.expanded }}"
 				:editing
 				on:link="store.updateLink(collection.id, event)"
 				on:title="store.updateTitle(collection.id, event)"
-				on:addlink="addLink(collection.id)"
 				on:deletelink="store.deleteLink(collection.id, event)"
 				on:deletegroup="store.deleteCollection(collection.id)"
 				on:expandGroup="store.expandCollection(collection.id, event)" />
@@ -53,10 +53,6 @@
 			LinkGroup,
 		},
 		methods: {
-			addLink(collectionId) {
-				this.store.addLink(collectionId);
-				this.set({editing:true});
-			}, 
 			addCollection() {
 				this.store.addCollection();
 				this.set({editing:true});

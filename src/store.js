@@ -2,6 +2,7 @@ import { Store } from 'svelte/store.js';
 import pipe from 'lodash/fp/pipe';
 import map from 'lodash/fp/map';
 import filter from 'lodash/fp/filter';
+import pick from 'lodash/fp/pick';
 
 class LinksStore extends Store {
 	async updateStore(newState) {
@@ -10,14 +11,14 @@ class LinksStore extends Store {
 		this.set(newState);
 	}
 
-	addLink(collectionId) {
+	addLink(collectionId, label, url) {
 		const collections = this.get('collections').map(collection => {
 			if (collection.id === collectionId) {
 				const newCollection = Object.assign({}, collection);
 				newCollection.links.push({
-					id: Date.now(),
-					label: '',
-					url: '',
+					id: `${Date.now()}`,
+					label: label || '',
+					url: url || '',
 					clicks: [],
 				})
 				return newCollection;
@@ -29,7 +30,7 @@ class LinksStore extends Store {
 	}
 	addCollection() {
 		const collections = this.get('collections').concat({
-			id: Date.now(),
+			id: `${Date.now()}`,
 			title: '',
 			expanded: true,
 			links: []
@@ -113,13 +114,23 @@ store.compute(
 store.compute(
 	'sortedCollections', 
 	['filteredCollections'], 
-	collections => collections
+	sortCollections
+)
+
+store.compute(
+	'collectionNames', 
+	['collections'], 
+	pipe(sortCollections, map(pick(['title', 'id'])))
+)
+
+function sortCollections(collections) {
+	return collections
 		.map(collection => {
 			return Object.assign({}, collection, { totalClicks: getTotalClicks(collection.links) })
 		})
 		.sort((a, b) => a.totalClicks - b.totalClicks)
 		.reverse()
-)
+}
 
 function getTotalClicks(links) {
 	return links.reduce((total, link) => total + link.clicks.length, 0);

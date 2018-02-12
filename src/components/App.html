@@ -4,6 +4,7 @@
 	<GroupCollection />
 </main>
 <PageFooter />
+<AddLink ref:addLink/>
 
 <style>
 	@import 'reset.css';
@@ -12,17 +13,31 @@
 </style>
 
 <script>
+	import AddLink from './AddLink.html';
 	import GroupCollection from './GroupCollection.html';
 	import PageFooter from './PageFooter.html';
 	import PageHeader from './PageHeader.html';
 	import Search from './Search.html';
 
 	export default {
+		oncreate() {
+			window.addEventListener('keydown', event => {
+				if(event.keyCode === 65 && event.metaKey) {
+					this.refs.addLink.show()
+				}
+			});
+		},
 		components: {
+			AddLink,
 			GroupCollection,
 			PageFooter,
 			PageHeader,
 			Search,
 		},
+		methods: {
+			showAddLinkModal(collectionId) {
+				this.refs.addLink.show(collectionId);
+			}
+		}
 	}
 </script>

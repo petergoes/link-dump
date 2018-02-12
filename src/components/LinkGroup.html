@@ -13,12 +13,14 @@
 			</li>
 		{{/each}}
 	</ul>
-	<footer>
-		{{#if $searchValue === ''}}
-			<button on:click="fire('addlink')">Add Link</button>
-		{{/if}}
-	</footer>
+
+	{{#if editing}}
+		<footer>
+			<button on:click="root.showAddLinkModal(id)">Add Link</button>
+		</footer>
+	{{/if}}
 </details>
+
 <dialog ref:dialog>
 	<div class="dialog-content">
 		<label>

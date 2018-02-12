@@ -1,4 +1,5 @@
 <footer>
+	<small>Add link (<kbd>⌘</kbd><kbd>⇧</kbd><kbd>A</kbd>)</small>
 	<a href="https://petergoes.nl" class="page-footer__link">
 	<span class="page-footer__name"><span class="page-footer__code-decoration" aria-hidden="true" role="presentation" tabindex="-1">.</span>peter-goes</span> <span class="page-footer__code-decoration" aria-hidden="true" role="presentation">{</span> 
 		<span class="page-footer__occupation">
@@ -13,17 +14,15 @@ footer {
 	grid-column: 1 / span 3;
 	display: grid;
 	grid-template-columns: var(--main-grid-columns);
-	grid-gap: var(--grid-gap);
+	grid-column-gap: var(--grid-gap);
 	background-color: var(--code-background);
 	color: var(--code-text);
+	padding: 0.75rem 0;
 }
 
 footer > * {
 	grid-column: 2;
-}
-
-a {
-	padding: 1.5rem 0;
+	padding: 0.75rem 0;
 	text-align: center;
 }
 
