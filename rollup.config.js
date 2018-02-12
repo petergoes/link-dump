@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import buble from 'rollup-plugin-buble';
 import uglify from 'rollup-plugin-uglify';
+import postcssProcess from './lib/postcss-process'
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -20,9 +21,10 @@ export default {
 			dev: !production,
 			// we'll extract any component CSS out into
 			// a separate file — better for performance
-			css: css => {
-				css.write('public/bundle.css');
-			},
+			css: css => postcssProcess({ 
+				css: css.code, 
+				map: css.map 
+			}).catch(err => console.error(err)),
 
 			// enable https://svelte.technology/guide#state-management
 			store: true,

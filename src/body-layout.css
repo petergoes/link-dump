@@ -1,12 +1,9 @@
-<slot></slot>
-
-<style>
-:global(:root) {
+:root {
 	--main-grid-columns: 1fr minmax(min-content, 110ch) 1fr;
 	--main-grid-rows: max-content max-content 1fr max-content;
 }
 
-:global(body) {
+body {
 	display: grid;
 	grid-template-columns: var(--main-grid-columns);
 	grid-template-rows: var(--main-grid-rows);
@@ -14,7 +11,6 @@
 	min-height: 100vh;
 }
 
-:global(body > *) {
+body > * {
 	grid-column: 2;
 }
-</style>

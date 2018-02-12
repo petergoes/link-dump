@@ -1,33 +1,28 @@
-<BodyLayoutStyles>
-<GlobalStyles>
-<StylesReset>
-	<PageHeader />
-	<Search />
-	<main>
-		<GroupCollection />
-	</main>
-	<PageFooter />
-</StylesReset>
-</BodyLayoutStyles>
+<PageHeader />
+<Search />
+<main>
+	<GroupCollection />
+</main>
+<PageFooter />
+
+<style>
+	@import 'reset.css';
+	@import 'global-styles.css';
+	@import 'body-layout.css';
+</style>
 
 <script>
-	import BodyLayoutStyles from './_BodyLayoutStyles.html';
-	import GlobalStyles from './_GlobalStyles.html';
 	import GroupCollection from './GroupCollection.html';
 	import PageFooter from './PageFooter.html';
 	import PageHeader from './PageHeader.html';
 	import Search from './Search.html';
-	import StylesReset from './_A_StylesReset.html';
 
 	export default {
 		components: {
-			BodyLayoutStyles,
-			GlobalStyles,
 			GroupCollection,
 			PageFooter,
 			PageHeader,
 			Search,
-			StylesReset,
 		},
 	}
 </script>

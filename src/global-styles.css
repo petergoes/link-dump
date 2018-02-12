@@ -1,11 +1,8 @@
-<slot></slot>
-
-<style>
-:global(*) {
+* {
 	box-sizing: border-box;
 }
 
-:global(@font-face){
+@font-face{
     font-family: 'Fira Code';
     src: url('/fonts/FiraCode-Regular.eot');
     src: url('/fonts/FiraCode-Regular.eot') format('embedded-opentype'),
@@ -16,7 +13,7 @@
     font-style: normal;
 }
 
-:global(@font-face){
+@font-face{
     font-family: 'Fira Code';
     src: url('/fonts/FiraCode-Bold.eot');
     src: url('/fonts/FiraCode-Bold.eot') format('embedded-opentype'),
@@ -27,7 +24,7 @@
     font-style: normal;
 }
 
-:global(:root) {
+:root {
 	--monospace-prefered: 'Fira Code', monospace;
 	--monospace: 'Fira Code', monospace;
 	--default-text-color: '';
@@ -59,54 +56,54 @@
 
 }
 
-:global(body) {
+body {
 	font-family: var(--monospace);
 	color: var(--default-text-color);
 	background-color: var(--background-color);
 	line-height: var(--line-height);
 
 }
-:global(h2, .h2) {
+h2, .h2 {
 	margin-top: calc(var(--line-height) * 2);
 }
 
-:global(h3, .h3) {
+h3, .h3 {
 	margin-top: var(--line-height);
 }
 
-:global(p) {
+p {
 	margin-bottom: var(--line-height);
 }
 
-:global(a) {
+a {
 	color: var(--link-color);
 	text-decoration: none;
 	outline: none;
 }
-:global(a h1:before, a h2:before, a h3:before, a h4:before, a h5:before, a h6:before) {
+a h1:before, a h2:before, a h3:before, a h4:before, a h5:before, a h6:before {
 	content: initial;
 	display: inline-block;
 }
 
-:global(a) {
+a {
 	border-bottom: 1px solid transparent;
 }
 
-:global(a:hover) {
+a:hover {
 	border-bottom: 1px solid var(--link-color);	
 }
 
-:global(blockquote) {
+blockquote {
 	border-left: 0.1875em solid var(--default-text-color-faded);
 	padding-left: calc(var(--char-width) + 0.1875em);
 	transform: translateX(calc(var(--char-width) - (0.1875em * 2))); 
 }
 
-:global(small) {
+small {
 	font-size: 0.75rem;
 }
 
-:global(button, input) {
+button, input {
 	border: 1px solid var(--default-text-color-faded);
 	background-color: transparent;
 	padding: 0.15rem;
@@ -116,22 +113,22 @@
 	line-height: 1;
 }
 
-:global(input) {
+input {
 	font-size: 1rem;
 }
 
-:global(button) {
+button {
 	cursor: pointer;
 }
 
-:global(button:hover, button:active, button:focus) {
+button:hover, button:active, button:focus {
 	outline: none;
 	background-color: var(--code-background);
 	color: var(--code-text);
 	border: 1px solid var(--code-background);
 }
 
-:global(pre code) {
+pre code {
 	width: 100%;
 	color: var(--background-color);
 	background-color: var(--code-background);
@@ -139,72 +136,70 @@
 	display: block;
 	border-radius: initial;
 }
-:global(pre code:before, pre code:after) {
+pre code:before, pre code:after {
 	content: initial;
 }
 
-:global(code) {
+code {
 	color: var(--inline-code-color);
 }
-:global(code:before) {
+code:before {
 	content: '`';
 	opacity: var(--markdown-decoration-fade);
 }
 
-:global(code:after) {
+code:after {
 	content: '`';
 	opacity: var(--markdown-decoration-fade);
 }
 
-:global(.fonts-loaded code) {
+.fonts-loaded code {
 	font-family: var(--monospace-prefered);
 }
 
-:global(h1) {
+h1 {
 	font-weight: 700;
 }
 
-:global(a:before) {
+a:before {
 	content: '[';
 	opacity: var(--markdown-decoration-fade);
 	color: var(--default-text-color);
 }
-:global(a:after) {
+a:after {
 	content: ']';
 	opacity: var(--markdown-decoration-fade);
 	color: var(--default-text-color);
 }
 
-:global(.headerlink:before, .headerlink:after) {
+.headerlink:before, .headerlink:after {
 	content: initial;
 }
 
-:global(strong:before, strong:after) {
+strong:before, strong:after {
 	content: '*';
 	opacity: var(--markdown-decoration-fade);
 	color: var(--default-text-color);
 }
 
-:global(em:before, i:before, em:after, i:after) {
+em:before, i:before, em:after, i:after {
 	content: '_';
 	opacity: var(--markdown-decoration-fade);
 	color: var(--default-text-color);
 }
 
-:global(ol) {
+ol {
 	counter-reset:li; /* Initiate a counter */
 }
-:global(ol > li) {
+ol > li {
 	position:relative; /* Create a positioning context */
 }
-:global(ol > li:before) {
+ol > li:before {
 	content:counter(li) + '. '; /* Use the counter as content */
 	counter-increment:li; /* Increment the counter by 1 */
 }
 
-:global(ul, ol) {
+ul, ol {
 	list-style: none;
 	margin-bottom: var(--line-height);
 }
-
-</style>
