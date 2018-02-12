@@ -1,4 +1,7 @@
 import { Store } from 'svelte/store.js';
+import pipe from 'lodash/fp/pipe';
+import map from 'lodash/fp/map';
+import filter from 'lodash/fp/filter';
 
 class LinksStore extends Store {
 	async updateStore(newState) {
@@ -104,13 +107,40 @@ store.compute(
 		searchValue === ''
 			? collections
 			: collections
-				.map(collection => {
-					const filteredLinks = collection.links.filter(
-						link => link.label.match(new RegExp(searchValue, 'i')))
-					return Object.assign({}, collection, {links: filteredLinks});
-				})
+				.map(collection => searchCollection(collection, searchValue))
 				.filter(collection => collection.links.length)
 )
+
+function searchCollection(collection, searchValue) {
+	const testString = doesStringMatchSearchValue(searchValue);
+	const links = collection.links.filter(link => testString(`${link.label} ${collection.title}`));
+	return Object.assign({}, collection, { links });
+}
+
+function getWordsFromString(str) {
+	return str.split(' ');
+}
+
+function getREFromString(str) {
+	return new RegExp(str, 'i');
+}
+
+function doesStringMatchSearchValue(sv) {
+	return function getTestPipeline(string) {
+		return pipe(
+			getWordsFromString, 
+			filter(str => str.length), 
+			map(getREFromString),
+			stringMatchesEveryRE(string),
+		)(sv);
+	}
+}
+
+function stringMatchesEveryRE(str) {
+	return function testREsOnString(res) { 
+		return res.every(re => str.match(re));
+	}
+}
 // store.observe('collections', collections => {
 // 	const now = new Date(Date.now());
 // 	const hours = `${now.getHours()}`.length === 1 ? `0${now.getHours()}` : now.getHours();

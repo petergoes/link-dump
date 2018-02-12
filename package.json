@@ -21,5 +21,8 @@
     "dev": "serve public & rollup --config --watch",
     "start": "serve public",
     "deploy": "node scripts/deploy.js"
+  },
+  "dependencies": {
+    "lodash": "4.17.5"
   }
 }
