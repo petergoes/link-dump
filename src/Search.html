@@ -1,9 +1,14 @@
 <section>
 	<input ref:inputSearch type="search" bind:value="$searchValue" placeholder="Search links" />
 	{{#if $searchValue === ''}}
-		<form action="https://duckduckgo.com/">
-			<input ref:inputWeb type="search" name="q" placeholder="Search DuckDuckGo" />
-		</form>
+		<div class="form-wrapper">
+			<form action="https://duckduckgo.com/">
+				<input ref:inputWeb type="search" name="q" placeholder="Search DuckDuckGo" />
+			</form>
+			<form on:submit="navigateTo(event)">
+				<input ref:inputNavigateTo type="url" placeholder="Navigate to" />
+			</form>
+		</div>
 	{{/if}}
 </section>
 
@@ -17,10 +22,25 @@
 		width: 75%;
 	}
 	
+	.form-wrapper {
+		display: flex;
+		justify-content: space-between;
+	}
+	.form-wrapper > * {
+		flex: 1;
+	}
+
+	.form-wrapper > *:first-child {
+		margin-right: 0.5rem;
+	}
+	.form-wrapper > *:last-child {
+		margin-left: 0.5rem;
+	}
+
 	form > input {
 		width: 100%;
 	}
-		
+
 	input:not(:last-child) {
 		margin-bottom: 1rem;
 	}
@@ -40,6 +60,14 @@
 		store: () => store,
 		oncreate() {
 			this.refs.inputSearch.focus();
+		},
+		methods: {
+			navigateTo(event) {
+				event.preventDefault();
+				const input = this.refs.inputNavigateTo.value;
+				const absUrl = /^http(s?)/.test(input)
+				window.location.replace(absUrl ? input : `http://${input}`);
+			}
 		}
 	};
 </script>
