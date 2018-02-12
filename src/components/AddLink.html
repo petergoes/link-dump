@@ -1,9 +1,10 @@
 <dialog ref:dialog>
+	<h2>Add Link</h2>
 	<div class="dialog-content">
 		{{#if collectionId}}
 			<label>
 				<div>Collection</div>
-				<input ref:collection value="{{ collectionId }}" disabled />
+				<input ref:collection value="{{ collectionTitle }}" disabled />
 			</label>	
 		{{else}}
 			<label>
@@ -102,6 +103,12 @@
 		},
 		oncreate() {
 			this.refs.dialog.addEventListener('close', () => this.close());
+		},
+		computed: {
+			collectionTitle: (collectionId, $collectionNames) => {
+				const collection = $collectionNames.find(collection => collection.id === collectionId);
+				return collection ? collection.title : '';
+			}
 		},
 		methods: {
 			close() {
