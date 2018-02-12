@@ -131,7 +131,7 @@
 			handleClick(event) {
 				event.preventDefault();
 				const { clicks, url } = this.options.data.link;
-				const newState = Object.assign({}, this.options.data.link, { clicks: clicks + 1, lastClicked: Date.now() });
+				const newState = Object.assign({}, this.options.data.link, { clicks: clicks.concat(Date.now()) });
 				this.fire('update', newState);
 				setTimeout(() => { window.location = url }, 10);
 			},

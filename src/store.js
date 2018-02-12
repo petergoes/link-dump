@@ -43,7 +43,7 @@ class LinksStore extends Store {
 				const newCollection = Object.assign({}, collection);
 				newCollection.links = newCollection.links
 					.map(link => link.id !== newLinkState.id ? link : newLinkState)
-					.sort((a, b) => a.clicks - b.clicks)
+					.sort((a, b) => a.clicks.length - b.clicks.length)
 					.reverse();
 
 				return newCollection;
@@ -110,6 +110,21 @@ store.compute(
 				.map(collection => searchCollection(collection, searchValue))
 				.filter(collection => collection.links.length)
 )
+
+store.compute(
+	'sortedCollections', 
+	['filteredCollections'], 
+	collections => collections
+		.map(collection => {
+			return Object.assign({}, collection, { totalClicks: getTotalClicks(collection.links) })
+		})
+		.sort((a, b) => a.totalClicks - b.totalClicks)
+		.reverse()
+)
+
+function getTotalClicks(links) {
+	return links.reduce((total, link) => total + link.clicks.length, 0);
+}
 
 function searchCollection(collection, searchValue) {
 	const testString = doesStringMatchSearchValue(searchValue);
