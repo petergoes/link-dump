@@ -48,10 +48,13 @@
 <script>
 	export default {
 		computed: {
-			links: ($searchedlinks, $searchValue) => $searchedlinks.concat([
-				{ collection: 'Web search:', label: $searchValue, url: `https://duckduckgo.com/?q=${$searchValue}` },
-				{ collection: 'Navigate to:', label: $searchValue, url: /^http/.test($searchValue) ? $searchValue : `http://${$searchValue}` },
-			])
+			links: ($searchedlinks, $searchValue) => 
+				$searchedlinks.length 
+					? $searchedlinks
+					: [
+						{ collection: 'Web search:', label: $searchValue, url: `https://duckduckgo.com/?q=${$searchValue}` },
+						{ collection: 'Navigate to:', label: $searchValue, url: /^http/.test($searchValue) ? $searchValue : `http://${$searchValue}` },
+					]
 		}
 	}
 </script>
