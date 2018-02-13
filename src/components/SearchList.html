@@ -3,7 +3,12 @@
 	<ul ref:list>
 		{{#each $searchedlinks as link, i}}
 			<li>
-				<a href="{{ link.url }}" target="_self" class="search-list-link" tabindex="{{i === 0 ? -1 : 0}}">
+				<a 
+					href="{{ link.url }}" 
+					target="_self" 
+					class="search-list-link" 
+					tabindex="{{i === 0 ? -1 : 0}}"
+					on:keydown="onkeydown(event)">
 					{{#if link.collection}}<span>{{ link.collection }} - </span>{{/if}}<strong>{{ link.label }}</strong>
 				</a>
 			</li>
@@ -49,3 +54,32 @@
 		color: var(--code-text);
 	}
 </style>
+
+<script>
+	export default {
+		methods: {
+			onkeydown(event) {
+				const nextItem = event.target.parentNode.nextSibling;
+				const prevItem = event.target.parentNode.previousSibling;
+
+				// keycode = arrow up
+				if (event.keyCode === 38 && prevItem) {
+					event.preventDefault();
+					prevItem.children[0].focus();
+				}
+
+				// keycode = arrow down
+				if (event.keyCode === 40 && nextItem) {
+					event.preventDefault();
+					nextItem.children[0].focus();
+				}
+			},
+			focusSecondItem() {
+				const items = this.refs.list ? this.refs.list.childNodes : [];
+				if (items.length >= 2) {
+					items[1].children[0].focus();
+				}
+			}
+		}
+	}
+</script>
