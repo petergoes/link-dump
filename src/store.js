@@ -99,10 +99,13 @@ const initialValue = {
 };
 const collections = JSON.parse(localStorage.getItem('state') || "{}");
 const store = new LinksStore(Object.assign({}, initialValue, collections));
-const defaultSearchLinks = searchValue => [
-	{ collection: 'Web search:', label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` },
-	{ collection: 'Navigate to:', label: searchValue, url: /^http/.test(searchValue) ? searchValue : `http://${searchValue}` },
-]
+const defaultSearchLinks = searchValue => {
+	const list = [];
+	const websearch = { collection: 'Web search:', label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` };
+	const navigate = { collection: 'Navigate to:', label: searchValue, url: /^http/.test(searchValue) ? searchValue : `http://${searchValue}` };
+	const isUrl = /\.|:/.test(searchValue);
+	return isUrl ? [navigate, websearch] : [websearch, navigate];
+}
 
 store.compute(
 	'searchedlinks',
