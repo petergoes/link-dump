@@ -1,15 +1,8 @@
 <section>
 	<input ref:inputSearch type="search" bind:value="$searchValue" placeholder="Search links" />
-	{{#if $searchValue === ''}}
-		<div class="form-wrapper">
-			<form action="https://duckduckgo.com/">
-				<input ref:inputWeb type="search" name="q" placeholder="Search DuckDuckGo" />
-			</form>
-			<form on:submit="navigateTo(event)">
-				<input ref:inputNavigateTo type="url" placeholder="Navigate to" />
-			</form>
-		</div>
-	{{/if}}
+	<div class="search-list-container">
+		<SearchList />
+	</div>
 </section>
 
 <style>
@@ -20,6 +13,14 @@
 	}
 	section > * {
 		width: 75%;
+	}
+
+	section > .search-list-container {
+		display: none;
+	}
+
+	section:focus-within > .search-list-container {
+		display: block;
 	}
 	
 	.form-wrapper {
@@ -41,10 +42,6 @@
 		width: 100%;
 	}
 
-	input:not(:last-child) {
-		margin-bottom: 1rem;
-	}
-
 	input:focus {
 		outline-color: var(--code-keyword);
 		outline-width: 1px;
@@ -55,11 +52,15 @@
 
 <script>
 	import store from '../store';
+	import SearchList from './SearchList.html';
 
 	export default {
 		store: () => store,
 		oncreate() {
 			this.refs.inputSearch.focus();
+		},
+		components: {
+			SearchList,
 		},
 		methods: {
 			navigateTo(event) {

@@ -101,6 +101,20 @@ const collections = JSON.parse(localStorage.getItem('state') || "{}");
 const store = new LinksStore(Object.assign({}, initialValue, collections));
 
 store.compute(
+	'searchedlinks',
+	['collections', 'searchValue'],
+	(collections, searchValue) => 
+		searchValue === ''
+			? []
+			: collections
+				.map(collection => searchCollection(collection, searchValue))
+				.reduce((list, collection) => {
+					const links = collection.links.map(link => Object.assign({}, link, { collection: collection.title }))
+					return list.concat(links);
+				}, [])
+)
+
+store.compute(
 	'filteredCollections',
 	['collections', 'searchValue'],
 	(collections, searchValue) => 
@@ -113,7 +127,7 @@ store.compute(
 
 store.compute(
 	'sortedCollections', 
-	['filteredCollections'], 
+	['collections'], 
 	sortCollections
 )
 

@@ -21,7 +21,7 @@ export default (ctx) => merge({
   },
   plugins: [
     atImport(),
-    customProperties(),
+    // customProperties(),
     autoprefixer({ browsers: 'last 2 versions, not ie <= 10, not ie_mob <= 10' }),
     cssnano({ discardComments: { removeAll: true } }),
   ]

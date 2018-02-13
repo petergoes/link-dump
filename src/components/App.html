@@ -18,13 +18,22 @@
 	import PageFooter from './PageFooter.html';
 	import PageHeader from './PageHeader.html';
 	import Search from './Search.html';
+	import store from '../store';
 
 	export default {
+		store: () => store,
 		oncreate() {
 			window.addEventListener('keydown', event => {
+				// keyCode = a
 				if(event.keyCode === 65 && event.metaKey) {
 					this.refs.addLink.show()
 				}
+
+				// keyCode = esc
+				if(event.keyCode === 27 && (event.target.type === 'search' || event.target.classList.contains('search-list-link'))) {
+					this.store.set({searchValue: ''});
+				}
+
 			});
 		},
 		components: {

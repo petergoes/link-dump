@@ -1,0 +1,57 @@
+<section>
+	{{#if $searchValue }}
+	<ul>
+		{{#each links as link}}
+			<li>
+				<a href="{{ link.url }}" target="_self" class="search-list-link">
+					{{#if link.collection}}<span>{{ link.collection }} - </span>{{/if}}<strong>{{ link.label }}</strong>
+				</a>
+			</li>
+		{{/each}}
+	</ul>
+	{{/if}}
+</section>
+
+<style>
+	section {
+		position: relative;
+		z-index: 1;
+	}
+	ul {
+		position: absolute;
+		width: 100%;
+		background-color: var(--background-color);
+		border: 1px solid var(--code-background);
+		padding: 1rem;
+	}
+
+	li {
+		display: flex;
+	}
+
+	li > * {
+		flex: 1;
+	}
+
+	a {
+		padding: 0.25rem;
+	}
+
+	a:hover,
+	a:focus,
+	a:active {
+		background-color: var(--code-background);
+		color: var(--code-text);
+	}
+</style>
+
+<script>
+	export default {
+		computed: {
+			links: ($searchedlinks, $searchValue) => $searchedlinks.concat([
+				{ collection: 'Web search:', label: $searchValue, url: `https://duckduckgo.com/?q=${$searchValue}` },
+				{ collection: 'Navigate to:', label: $searchValue, url: /^http/.test($searchValue) ? $searchValue : `http://${$searchValue}` },
+			])
+		}
+	}
+</script>
