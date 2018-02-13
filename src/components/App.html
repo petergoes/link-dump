@@ -1,5 +1,5 @@
 <PageHeader />
-<Search />
+<Search ref:search />
 <main>
 	<GroupCollection />
 </main>
@@ -29,11 +29,15 @@
 					this.refs.addLink.show()
 				}
 
+				// keycode = f
+				if(event.keyCode === 70 && event.metaKey && event.shiftKey) {
+					this.refs.search.refs.inputSearch.focus();
+				}
+
 				// keyCode = esc
 				if(event.keyCode === 27 && (event.target.type === 'search' || event.target.classList.contains('search-list-link'))) {
 					this.store.set({searchValue: ''});
 				}
-
 			});
 		},
 		components: {
