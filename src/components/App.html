@@ -37,6 +37,7 @@
 				// keyCode = esc
 				if(event.keyCode === 27 && (event.target.type === 'search' || event.target.classList.contains('search-list-link'))) {
 					this.store.set({searchValue: ''});
+					this.refs.search.refs.inputSearch.focus();
 				}
 			});
 		},
