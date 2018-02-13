@@ -22,25 +22,6 @@
 	section:focus-within > .search-list-container {
 		display: block;
 	}
-	
-	.form-wrapper {
-		display: flex;
-		justify-content: space-between;
-	}
-	.form-wrapper > * {
-		flex: 1;
-	}
-
-	.form-wrapper > *:first-child {
-		margin-right: 0.5rem;
-	}
-	.form-wrapper > *:last-child {
-		margin-left: 0.5rem;
-	}
-
-	form > input {
-		width: 100%;
-	}
 
 	input:focus {
 		outline-color: var(--code-keyword);
@@ -58,17 +39,16 @@
 		store: () => store,
 		oncreate() {
 			this.refs.inputSearch.focus();
+			this.refs.inputSearch.addEventListener('keydown', event => {
+				const links = this.store.get('searchedlinks');
+				//keycode enter
+				if(event.keyCode === 13 && links.length) {
+					window.location.replace(links[0].url);
+				}
+			})
 		},
 		components: {
 			SearchList,
 		},
-		methods: {
-			navigateTo(event) {
-				event.preventDefault();
-				const input = this.refs.inputNavigateTo.value;
-				const absUrl = /^http(s?)/.test(input)
-				window.location.replace(absUrl ? input : `http://${input}`);
-			}
-		}
 	};
 </script>

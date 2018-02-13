@@ -99,19 +99,23 @@ const initialValue = {
 };
 const collections = JSON.parse(localStorage.getItem('state') || "{}");
 const store = new LinksStore(Object.assign({}, initialValue, collections));
+const defaultSearchLinks = searchValue => [
+	{ collection: 'Web search:', label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` },
+	{ collection: 'Navigate to:', label: searchValue, url: /^http/.test(searchValue) ? searchValue : `http://${searchValue}` },
+]
 
 store.compute(
 	'searchedlinks',
 	['collections', 'searchValue'],
-	(collections, searchValue) => 
-		searchValue === ''
-			? []
-			: collections
-				.map(collection => searchCollection(collection, searchValue))
-				.reduce((list, collection) => {
-					const links = collection.links.map(link => Object.assign({}, link, { collection: collection.title }))
-					return list.concat(links);
-				}, [])
+	(collections, searchValue) => {
+		const foundLinks = collections
+			.map(collection => searchCollection(collection, searchValue))
+			.reduce((list, collection) => {
+				const links = collection.links.map(link => Object.assign({}, link, { collection: collection.title }))
+				return list.concat(links);
+			}, [])
+		return foundLinks.length ? foundLinks : defaultSearchLinks(searchValue);
+	}
 )
 
 store.compute(

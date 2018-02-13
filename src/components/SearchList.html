@@ -1,9 +1,9 @@
 <section>
 	{{#if $searchValue }}
-	<ul>
-		{{#each links as link}}
+	<ul ref:list>
+		{{#each $searchedlinks as link, i}}
 			<li>
-				<a href="{{ link.url }}" target="_self" class="search-list-link">
+				<a href="{{ link.url }}" target="_self" class="search-list-link" tabindex="{{i === 0 ? -1 : 0}}">
 					{{#if link.collection}}<span>{{ link.collection }} - </span>{{/if}}<strong>{{ link.label }}</strong>
 				</a>
 			</li>
@@ -25,6 +25,11 @@
 		padding: 1rem;
 	}
 
+	ul:not(:focus-within) li:first-child a {
+		background-color: var(--code-background);
+		color: var(--code-text);
+	}
+
 	li {
 		display: flex;
 	}
@@ -44,17 +49,3 @@
 		color: var(--code-text);
 	}
 </style>
-
-<script>
-	export default {
-		computed: {
-			links: ($searchedlinks, $searchValue) => 
-				$searchedlinks.length 
-					? $searchedlinks
-					: [
-						{ collection: 'Web search:', label: $searchValue, url: `https://duckduckgo.com/?q=${$searchValue}` },
-						{ collection: 'Navigate to:', label: $searchValue, url: /^http/.test($searchValue) ? $searchValue : `http://${$searchValue}` },
-					]
-		}
-	}
-</script>
