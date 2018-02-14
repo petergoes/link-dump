@@ -1,0 +1,88 @@
+<dialog ref:dialog>
+	<h2>Add Collection</h2>
+	<div class="dialog-content">
+		<label>
+			<div>Title</div>
+			<input ref:title />
+		</label>
+		<div class="dialog-buttons">
+			<button on:click="add()">Add</button>
+		</div>
+	</div>
+</dialog>
+
+<style>
+	dialog {
+		background-color: var(--code-background);
+		z-index: 1;
+		color: var(--code-text);
+		min-width: 50vw;
+		border: none;
+	}
+
+	.dialog-content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.dialog-content > * {
+		margin: 1rem 0;
+	}
+	
+	dialog input {
+		background-color: var(--code-text);
+		color: var(--code-background);
+		width: calc(100% - 0.3rem - 2px);
+		margin-top: 0.25rem;
+		border: none;
+	}
+
+	dialog input:focus {
+		outline-color: var(--code-keyword);
+		outline-width: 1px;
+		outline-style: solid;
+		outline-offset: 1px;
+	}
+
+
+	dialog button {
+		background-color: var(--code-background);
+		border-color: var(--code-text);
+		color: var(--code-text);
+	}
+
+	dialog button:hover,
+	dialog button:focus,
+	dialog button:active {
+		border-color: var(--code-keyword);
+		color: var(--code-keyword);
+	}
+
+	.dialog-buttons {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.dialog-buttons > * {
+		margin-left: 1rem;
+	}
+</style>
+
+<script>
+	import store from '../store';
+
+	export default {
+		store: () => store,
+		methods: {
+			show(collectionId) {
+				this.refs.dialog.showModal();
+			},
+			add() {
+				const title = this.refs.title.value;
+				this.store.addCollection(title);
+				this.refs.dialog.close();
+			}
+		}
+	}
+
+</script>

@@ -1,6 +1,9 @@
 <details ref:details open="{{ expanded }}">
 	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
-		<h2><span class="title">{{ title }}</span> {{#if editing}}<button on:click="editTitle()">Edit</button>{{/if}}</h2>
+		<h2>
+			<span class="title">{{ title }}</span>
+			<button on:click="editTitle()" class="edit-button {{editing ? 'edit-button--show' : ''}}">Edit</button>
+		</h2>
 	</summary>
 	<ul>
 		{{#each links as link @url}}
@@ -13,12 +16,6 @@
 			</li>
 		{{/each}}
 	</ul>
-
-	{{#if editing}}
-		<footer>
-			<button on:click="callAddLinkModal()">Add Link</button>
-		</footer>
-	{{/if}}
 </details>
 
 <dialog ref:dialog>
@@ -58,7 +55,14 @@
 		outline-style: solid;
 		outline-offset: 1px;
 	}
+	
+	.edit-button {
+		visibility: hidden;
+	}
 
+	.edit-button--show {
+		visibility: initial;
+	}
 
 	li {
 		z-index: 0;  /*set a base z-index for the contents of <Link> */

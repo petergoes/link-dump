@@ -1,5 +1,10 @@
 <a href="{{ link.url }}" target="_self" on:click="handleClick(event)">{{ link.label }}<small>{{ link.url }}</small></a> 
-{{#if editing}}<button on:click="goEdit()">Edit</button>{{/if}}
+<button 
+	class="edit-button {{editing ? 'edit-button--show' : ''}}" 
+	on:click="goEdit()">
+	Edit
+</button>
+
 <dialog ref:dialog>
 	<div class="dialog-content">
 		<label>
@@ -60,6 +65,14 @@
 		display: block;
 	}
 
+	.edit-button {
+		visibility: hidden;
+	}
+
+	.edit-button--show {
+		visibility: initial;
+	}
+
 	dialog {
 		background-color: var(--code-background);
 		z-index: 1;
@@ -91,7 +104,6 @@
 		outline-style: solid;
 		outline-offset: 1px;
 	}
-
 
 	dialog button {
 		background-color: var(--code-background);

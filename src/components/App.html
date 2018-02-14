@@ -1,18 +1,31 @@
 <PageHeader />
 <Search ref:search />
 <main>
-	<GroupCollection />
+	<GroupCollection :editing />
+	<aside class="actions">
+		{{#if editing}}
+		<button on:click="showAddLinkModal()">Add link</button>
+		<button on:click="showAddCollectionModal()">Add collection</button>
+		{{/if}}
+		<button on:click="set({ editing: !editing })">Edit</button>
+	</aside>
 </main>
 <PageFooter />
+<AddCollection ref:addCollection/>
 <AddLink ref:addLink/>
 
 <style>
 	@import 'reset.css';
 	@import 'global-styles.css';
 	@import 'body-layout.css';
+
+	.actions > :last-child {
+		float: right;
+	}
 </style>
 
 <script>
+	import AddCollection from './AddCollection.html';
 	import AddLink from './AddLink.html';
 	import GroupCollection from './GroupCollection.html';
 	import PageFooter from './PageFooter.html';
@@ -29,6 +42,16 @@
 					this.refs.addLink.show()
 				}
 
+				// keyCode = d
+				if(event.keyCode === 68 && event.metaKey) {
+					this.refs.addCollection.show()
+				}
+
+				// keycode = e
+				if(event.keyCode === 69 && event.metaKey) {
+					this.set({ editing: !this.get('editing') });
+				}
+
 				// keycode = f
 				if(event.keyCode === 70 && event.metaKey && event.shiftKey) {
 					this.refs.search.refs.inputSearch.focus();
@@ -40,7 +63,13 @@
 				}
 			});
 		},
+		data() {
+			return {
+				editing: false
+			}
+		},
 		components: {
+			AddCollection,
 			AddLink,
 			GroupCollection,
 			PageFooter,
@@ -48,8 +77,11 @@
 			Search,
 		},
 		methods: {
-			showAddLinkModal(collectionId) {
-				this.refs.addLink.show(collectionId);
+			showAddLinkModal() {
+				this.refs.addLink.show();
+			},
+			showAddCollectionModal() {
+				this.refs.addCollection.show();
 			}
 		}
 	}

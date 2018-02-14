@@ -15,14 +15,6 @@
 		</li>
 	{{/each}}
 </ul>
-<div class="action-buttons">
-<button on:click="addCollection()">Add Collection</button>
-{{#if !editing}}
-	<button on:click="set({editing:true})">Edit</button>
-{{else}}
-	<button on:click="set({editing:false})">Stop editing</button>
-{{/if}}
-</div>
 
 <style>
 	ul {
@@ -30,11 +22,6 @@
 		grid-template-columns: repeat(auto-fit, minmax(200px, max-content));
 		grid-gap: var(--grid-gap);
 		margin-bottom: var(--grid-gap);
-	}
-
-	.action-buttons {
-		display: flex;
-		justify-content: space-between;
 	}
 </style>
 

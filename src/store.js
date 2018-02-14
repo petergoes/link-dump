@@ -28,10 +28,10 @@ class LinksStore extends Store {
 		})
 		this.updateStore({ collections });
 	}
-	addCollection() {
+	addCollection(title) {
 		const collections = this.get('collections').concat({
 			id: `${Date.now()}`,
-			title: '',
+			title: title || '',
 			expanded: true,
 			links: []
 		});
