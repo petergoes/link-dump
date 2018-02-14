@@ -1,9 +1,5 @@
 <a href="{{ link.url }}" target="_self" on:click="handleClick(event)">{{ link.label }}<small>{{ link.url }}</small></a> 
-<button 
-	class="edit-button {{editing ? 'edit-button--show' : ''}}" 
-	on:click="goEdit()">
-	Edit
-</button>
+{{#if editing}}<button class="edit-button" on:click="goEdit()">Edit</button>{{/if}}
 
 <dialog ref:dialog>
 	<h2>Edit link</h2>
@@ -27,7 +23,10 @@
 <style>
 	a {
 		position: relative;
-		margin-right: var(--grid-gap);
+		margin-right: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	a:hover,
@@ -67,11 +66,7 @@
 	}
 
 	.edit-button {
-		visibility: hidden;
-	}
-
-	.edit-button--show {
-		visibility: initial;
+		margin-left: var(--grid-gap);
 	}
 
 	dialog {
