@@ -39,27 +39,42 @@
 			window.addEventListener('keydown', event => {
 				// keyCode = a
 				if(event.keyCode === 65 && event.metaKey) {
-					this.refs.addLink.show()
+					this.refs.addLink.show();
+					return;
 				}
 
 				// keyCode = d
 				if(event.keyCode === 68 && event.metaKey) {
 					this.refs.addCollection.show()
+					return;
 				}
 
 				// keycode = e
 				if(event.keyCode === 69 && event.metaKey) {
 					this.set({ editing: !this.get('editing') });
+					return;
 				}
 
 				// keycode = f
 				if(event.keyCode === 70 && event.metaKey && event.shiftKey) {
 					this.refs.search.refs.inputSearch.focus();
+					return;
+				}
+
+				// keyCode = esc (in search field)
+				if(
+					event.keyCode === 27 && 
+					(event.target.type === 'search' || event.target.classList.contains('search-list-link')) &&
+					this.store.get('searchValue') !== '' ) {
+
+					this.refs.search.refs.inputSearch.select();
+					return;
 				}
 
 				// keyCode = esc
-				if(event.keyCode === 27 && (event.target.type === 'search' || event.target.classList.contains('search-list-link'))) {
-					this.refs.search.refs.inputSearch.select();
+				if(event.keyCode === 27 && this.get('editing')) {
+					this.set({editing: false})
+					return;
 				}
 			});
 		},
