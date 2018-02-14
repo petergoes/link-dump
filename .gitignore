@@ -61,3 +61,5 @@ typings/
 .next
 
 public/bundle.*
+public/sw.js
+public/workbox-sw.prod.v2.1.2.*

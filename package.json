@@ -26,9 +26,11 @@
     "build": "rollup --config",
     "dev": "serve public & rollup --config --watch",
     "start": "serve public",
+    "predeploy": "workbox generate:sw",
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
-    "lodash": "4.17.5"
+    "lodash": "4.17.5",
+    "workbox-cli": "2.1.2"
   }
 }
