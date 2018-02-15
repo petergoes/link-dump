@@ -1,28 +1,21 @@
 <Dialog 
-	title="Add link"
+	title="Add Link"
 	ref:dialog
 	on:close="onClose(event)">
-	{{#if collectionId}}
-		<label>
-			<div>Collection</div>
-			<input ref:collection value="{{ collectionTitle }}" disabled />
-		</label>	
-	{{else}}
-		<label>
-			<div>Collection</div>		
-				<select ref:collection>
-					{{#each $collectionNames as collection}}
-						<option value="{{ collection.id }}">{{ collection.title }}</option>
-					{{/each}}
-				</select>
-		</label>
-	{{/if}}
 	<label>
-		<div>Label</div>
+		<span>Collection</span>		
+		<select ref:collection>
+			{{#each $collectionNames as collection}}
+				<option value="{{ collection.id }}">{{ collection.title }}</option>
+			{{/each}}
+		</select>
+	</label>
+	<label>
+		<span>Label</span>
 		<input ref:label />
 	</label>
 	<label>
-		<div>Url</div>
+		<span>Url</span>
 		<input ref:url />
 	</label>
 </Dialog>
@@ -42,12 +35,6 @@
 		},
 		components: {
 			Dialog,
-		},
-		computed: {
-			collectionTitle: (collectionId, $collectionNames) => {
-				const collection = $collectionNames.find(collection => collection.id === collectionId);
-				return collection ? collection.title : '';
-			}
 		},
 		methods: {
 			show(collectionId) {
