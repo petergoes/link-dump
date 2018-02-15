@@ -34,10 +34,11 @@
 		flex-direction: column;
 	}
 
-	.dialog-content > * {
+	.dialog-content > :global(*) {
 		margin: 1rem 0;
 	}
-
+	
+	dialog :global(select),
 	dialog :global(input) {
 		background-color: var(--code-text);
 		color: var(--code-background);
@@ -46,6 +47,7 @@
 		border: none;
 	}
 
+	dialog :global(select:focus),
 	dialog :global(input:focus) {
 		outline-color: var(--code-keyword);
 		outline-width: 1px;

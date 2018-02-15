@@ -1,95 +1,34 @@
-<dialog ref:dialog>
-	<h2>Add Link</h2>
-	<div class="dialog-content">
-		{{#if collectionId}}
-			<label>
-				<div>Collection</div>
-				<input ref:collection value="{{ collectionTitle }}" disabled />
-			</label>	
-		{{else}}
-			<label>
-				<div>Collection</div>		
-					<select ref:collection>
-						{{#each $collectionNames as collection}}
-							<option value="{{ collection.id }}">{{ collection.title }}</option>
-						{{/each}}
-					</select>
-			</label>
-		{{/if}}
+<Dialog 
+	title="Add link"
+	ref:dialog
+	on:close="onClose(event)">
+	{{#if collectionId}}
 		<label>
-			<div>Label</div>
-			<input ref:label />
-		</label>
+			<div>Collection</div>
+			<input ref:collection value="{{ collectionTitle }}" disabled />
+		</label>	
+	{{else}}
 		<label>
-			<div>Url</div>
-			<input ref:url />
+			<div>Collection</div>		
+				<select ref:collection>
+					{{#each $collectionNames as collection}}
+						<option value="{{ collection.id }}">{{ collection.title }}</option>
+					{{/each}}
+				</select>
 		</label>
-		<div class="dialog-buttons">
-			<button on:click="add()">Add</button>
-		</div>
-	</div>
-</dialog>
-
-<style>
-	dialog {
-		background-color: var(--code-background);
-		z-index: 1;
-		color: var(--code-text);
-		min-width: 50vw;
-		border: none;
-	}
-
-	.dialog-content {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.dialog-content > * {
-		margin: 1rem 0;
-	}
-	
-	dialog select,
-	dialog input {
-		background-color: var(--code-text);
-		color: var(--code-background);
-		width: calc(100% - 0.3rem - 2px);
-		margin-top: 0.25rem;
-		border: none;
-	}
-
-	dialog select:focus,
-	dialog input:focus {
-		outline-color: var(--code-keyword);
-		outline-width: 1px;
-		outline-style: solid;
-		outline-offset: 1px;
-	}
-
-
-	dialog button {
-		background-color: var(--code-background);
-		border-color: var(--code-text);
-		color: var(--code-text);
-	}
-
-	dialog button:hover,
-	dialog button:focus,
-	dialog button:active {
-		border-color: var(--code-keyword);
-		color: var(--code-keyword);
-	}
-
-	.dialog-buttons {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.dialog-buttons > * {
-		margin-left: 1rem;
-	}
-</style>
+	{{/if}}
+	<label>
+		<div>Label</div>
+		<input ref:label />
+	</label>
+	<label>
+		<div>Url</div>
+		<input ref:url />
+	</label>
+</Dialog>
 
 <script>
+	import Dialog from './Dialog.html';
 	import store from '../store';
 
 	const initialData = {
@@ -101,8 +40,8 @@
 		data() {
 			return initialData
 		},
-		oncreate() {
-			this.refs.dialog.addEventListener('close', () => this.close());
+		components: {
+			Dialog,
 		},
 		computed: {
 			collectionTitle: (collectionId, $collectionNames) => {
@@ -111,22 +50,21 @@
 			}
 		},
 		methods: {
-			close() {
-				if (this.refs.dialog.open) {
-					this.refs.dialog.close();
-				}
-				this.set(initialData);
-			},
 			show(collectionId) {
 				this.set({ collectionId });
-				this.refs.dialog.showModal();
+				this.refs.dialog.show();
 			},
 			add() {
 				const collectionId = this.refs.collection.value;
 				const label = this.refs.label.value;
 				const url = this.refs.url.value;
 				this.store.addLink(collectionId, label, url);
-				this.close();
+			},
+			onClose(action) {
+				if (action === 'confirm') {
+					this.add();
+				}
+				this.set(initialData);
 			}
 		}
 	}
