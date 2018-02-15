@@ -1,24 +1,22 @@
 <a href="{{ link.url }}" target="_self" on:click="handleClick(event)">{{ link.label }}<small>{{ link.url }}</small></a> 
 {{#if editing}}<button class="edit-button" on:click="goEdit()">Edit</button>{{/if}}
-
-<dialog ref:dialog>
-	<h2>Edit link</h2>
-	<div class="dialog-content">
-		<label>
-			<div>Label</div>
-			<input ref:label value="{{ link.label }}" />
-		</label>
-		<label>
-			<div>Url</div>
-			<input ref:url value="{{ link.url }}" />
-		</label>
-		<div class="dialog-buttons">
-			<button on:click="finishEdit()">Done</button>
-			<button on:click="deleteLink()">Delete</button>
-		</div>
-	</div>
-</dialog>
-	
+<Dialog 
+	title="Edit link"
+	ref:dialog
+	actionButtons="{{ [
+		{label: 'Done', value: 'confirm'},
+		{label: 'Delete', value: 'delete'}
+	] }}"
+	on:close="closeDialog(event)">
+	<label>
+		<div>Label</div>
+		<input ref:label value="{{ link.label }}" />
+	</label>
+	<label>
+		<div>Url</div>
+		<input ref:url value="{{ link.url }}" />
+	</label>
+</Dialog>
 
 <style>
 	a {
@@ -68,71 +66,21 @@
 	.edit-button {
 		margin-left: var(--grid-gap);
 	}
-
-	dialog {
-		background-color: var(--code-background);
-		z-index: 1;
-		color: var(--code-text);
-		min-width: 50vw;
-		border: none;
-	}
-
-	.dialog-content {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.dialog-content > * {
-		margin: 1rem 0;
-	}
-
-	dialog input {
-		background-color: var(--code-text);
-		color: var(--code-background);
-		width: calc(100% - 0.3rem - 2px);
-		margin-top: 0.25rem;
-		border: none;
-	}
-
-	dialog input:focus {
-		outline-color: var(--code-keyword);
-		outline-width: 1px;
-		outline-style: solid;
-		outline-offset: 1px;
-	}
-
-	dialog button {
-		background-color: var(--code-background);
-		border-color: var(--code-text);
-		color: var(--code-text);
-	}
-
-	dialog button:hover,
-	dialog button:focus,
-	dialog button:active {
-		border-color: var(--code-keyword);
-		color: var(--code-keyword);
-	}
-
-	.dialog-buttons {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.dialog-buttons > * {
-		margin-left: 1rem;
-	}
 </style>
 
 <script>
+	import Dialog from './Dialog.html';
+
 	export default {
+		components: {
+			Dialog,
+		},
 		methods: {
-			goEdit() { this.refs.label.focus(); this.refs.dialog.showModal(); },
+			goEdit() { this.refs.label.focus(); this.refs.dialog.show(); },
 			finishEdit() {
 				const label = this.refs.label.value;
 				const url = this.refs.url.value;
 				const newState = Object.assign({}, this.options.data.link, {label, url});
-				this.refs.dialog.close();
 				this.fire('update', newState);
 			},
 			deleteLink() { this.fire('delete', this.options.data.link.id); },
@@ -143,6 +91,18 @@
 				this.fire('update', newState);
 				setTimeout(() => { window.location = url }, 10);
 			},
+			closeDialog(action) {
+				switch(action) {
+					case 'confirm': 
+						this.finishEdit();
+						return;
+					case 'delete':
+						this.deleteLink();
+						return;
+					default:
+						return;
+				}
+			}
 		}
 	}
 </script>

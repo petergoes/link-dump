@@ -1,0 +1,108 @@
+<dialog ref:dialog>
+	<section>
+		<header>
+			<h2>{{ title }}</h2>
+		</header>
+		<div class="dialog-content">
+			<slot></slot>
+		</div>
+		<footer class="action-buttons">
+			{{#if actionButtons.length === 0}}
+				<button on:click="confirm(confirmValue)">{{ confirmLabel }}</button>
+			{{/if}}
+			{{#each actionButtons as actionButton}}
+				<button on:click="confirm(actionButton.value)">
+					{{ actionButton.label }}
+				</button>
+			{{/each}}
+			<button on:click="cancel()">Cancel</button>
+		</footer>
+	</section>
+</dialog>
+
+<style>
+	dialog {
+		background-color: var(--code-background);
+		z-index: 1;
+		color: var(--code-text);
+		min-width: 50vw;
+		border: none;
+	}
+
+	.dialog-content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.dialog-content > * {
+		margin: 1rem 0;
+	}
+
+	dialog :global(input) {
+		background-color: var(--code-text);
+		color: var(--code-background);
+		width: calc(100% - 0.3rem - 2px);
+		margin-top: 0.25rem;
+		border: none;
+	}
+
+	dialog :global(input:focus) {
+		outline-color: var(--code-keyword);
+		outline-width: 1px;
+		outline-style: solid;
+		outline-offset: 1px;
+	}
+
+	button {
+		background-color: var(--code-background);
+		border-color: var(--code-text);
+		color: var(--code-text);
+	}
+
+	button:hover,
+	button:focus,
+	button:active {
+		border-color: var(--code-keyword);
+		color: var(--code-keyword);
+	}
+
+	.action-buttons {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.action-buttons > * {
+		margin-left: 1rem;
+	}
+</style>
+
+<script>
+	export default {
+		oncreate() {
+			this.refs.dialog.addEventListener('close', (event) => {
+				const returnValue = event.target.returnValue !== '' 
+					? event.target.returnValue 
+					: 'cancel';
+				this.fire('close', returnValue);
+			})
+		},
+		data() {
+			return {
+				confirmValue: 'confirm',
+				confirmLabel: 'Ok',
+				actionButtons: [],
+			}
+		},
+		methods: {
+			cancel() {
+				this.refs.dialog.close('cancel');
+			},
+			confirm(action) {
+				this.refs.dialog.close(action);
+			},
+			show() {
+				this.refs.dialog.showModal();
+			}
+		}
+	}
+</script>
