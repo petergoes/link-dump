@@ -109,7 +109,6 @@ button, input {
 	padding: 0.15rem;
 	font-family: var(--monospace-prefered);
 	font-size: 0.75rem;
-	transform: translateY(-2px);
 	line-height: 1;
 }
 

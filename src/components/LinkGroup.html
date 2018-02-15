@@ -1,9 +1,9 @@
 <details ref:details open="{{ expanded }}">
 	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
-		<h2>
-			<span class="title">{{ title }}</span>
-			<button on:click="editTitle()" class="edit-button {{editing ? 'edit-button--show' : ''}}">Edit</button>
-		</h2>
+		<h2 class="title">{{ title }}</h2>
+		{{#if editing}}
+			<button class="edit-button" on:click="editTitle()">Edit</button>
+		{{/if}}
 	</summary>
 	<ul>
 		{{#each links as link @url}}
@@ -17,20 +17,19 @@
 		{{/each}}
 	</ul>
 </details>
-
-<dialog ref:dialog>
-	<h2>Edit collection title</h2>
-	<div class="dialog-content">
-		<label>
-			<div>Title</div>
-			<input ref:title value="{{ title }}"/>
-		</label>
-		<div class="dialog-buttons">
-			<button on:click="finishEditTitle()">Done</button>
-			<button on:click="deleteGroup(title)">Delete</button>
-		</div>
-	</div>
-</dialog>
+<Dialog 
+	title="Edit collection"
+	ref:dialog
+	actionButtons="{{ [
+		{label: 'Ok', value: 'confirm'},
+		{label: 'Delete', value: 'delete'}
+	] }}"
+	on:close="closeDialog(event)">
+	<label>
+		<span>Title</span>
+		<input ref:title value="{{ title }}"/>
+	</label>
+</Dialog>
 
 <style>
 	details {
@@ -56,14 +55,6 @@
 		outline-style: solid;
 		outline-offset: 1px;
 	}
-	
-	.edit-button {
-		visibility: hidden;
-	}
-
-	.edit-button--show {
-		visibility: initial;
-	}
 
 	li {
 		z-index: 0;  /*set a base z-index for the contents of <Link> */
@@ -83,67 +74,20 @@
 	}
 
 	.title {
-		margin-right: var(--grid-gap);
 		font-weight: 700;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: inline-block;
 	}
 
-	dialog {
-		background-color: var(--code-background);
-		z-index: 1;
-		color: var(--code-text);
-		min-width: 50vw;
-		border: none;
-	}
-
-	.dialog-content {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.dialog-content > * {
-		margin: 1rem 0;
-	}
-
-	dialog input {
-		background-color: var(--code-text);
-		color: var(--code-background);
-		width: calc(100% - 0.3rem - 2px);
-		margin-top: 0.25rem;
-		border: none;
-	}
-
-	dialog input:focus {
-		outline-color: var(--code-keyword);
-		outline-width: 1px;
-		outline-style: solid;
-		outline-offset: 1px;
-	}
-
-
-	dialog button {
-		background-color: var(--code-background);
-		border-color: var(--code-text);
-		color: var(--code-text);
-	}
-
-	dialog button:hover,
-	dialog button:focus,
-	dialog button:active {
-		border-color: var(--code-keyword);
-		color: var(--code-keyword);
-	}
-
-	.dialog-buttons {
-		display: flex;
-		justify-content: flex-end;
-	}
-
-	.dialog-buttons > * {
-		margin-left: 1rem;
+	.edit-button {
+		margin-left: var(--grid-gap);
 	}
 </style>
 
 <script>
+	import Dialog from './Dialog.html';
 	import Link from './Link.html';
 	import store from '../store';
 
@@ -161,6 +105,7 @@
 			}
 		},
 		components: {
+			Dialog,
 			Link,
 		},
 		methods: {
@@ -173,20 +118,31 @@
 			},
 			editTitle() { 
 				this.set({titleEditing: true}); 
-				this.refs.dialog.showModal();
+				this.refs.dialog.show();
 				this.refs.title.focus();
 			},
-			finishEditTitle() {
+			finishEdit() {
 				this.fire('title', this.refs.title.value);
-				this.refs.dialog.close();
 				this.set({ titleEditing: false });
 			},
-			deleteGroup(title) {
-				if (window.confirm(`Do you want to delete ${title}?`)) {
+			deleteGroup() {
+				if (window.confirm(`Do you want to delete ${this.refs.title.value}?`)) {
 					this.fire('deletegroup');
 					this.set({ titleEditing: false });
 				}
 			},
+			closeDialog(action) {
+				switch(action) {
+					case 'confirm': 
+						this.finishEdit();
+						return;
+					case 'delete':
+						this.deleteGroup();
+						return;
+					default:
+						return;
+				}
+			}
 		}
 	}
 </script>
