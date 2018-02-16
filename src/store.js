@@ -91,14 +91,42 @@ class LinksStore extends Store {
 		});
 		this.updateStore({ collections });
 	}
+	moveLink(linkId, originCollectionId, targetCollectionId) {
+		let linkObj;
+		let collections = this.get('collections');
+		let originCollection = collections.find(collection => collection.id === originCollectionId);
+		let targetCollection = collections.find(collection => collection.id === targetCollectionId);
+
+		originCollection.links = originCollection.links.filter(link => {
+			if (link.id === linkId) {
+				linkObj = Object.assign({}, link);
+				return false;
+			}
+			return true;
+		});
+
+		targetCollection.links.push(linkObj);
+
+		collections = collections.map(collection => {
+			if (collection.id === originCollection.id) {
+				return originCollection;
+			} else if (collection.id === targetCollection.id) {
+				return targetCollection;
+			} else {
+				return collection;
+			}
+		})
+		this.updateStore({ collections });
+	}
 }
 
 const initialValue = {
 	collections: [],
 	searchValue: ''
 };
-const collections = JSON.parse(localStorage.getItem('state') || "{}");
-const store = new LinksStore(Object.assign({}, initialValue, collections));
+const collectionsState = JSON.parse(localStorage.getItem('state') || "{}");
+const sortedCollections = sortCollections(collectionsState.collections);
+const store = new LinksStore(Object.assign({}, initialValue, { collections: sortedCollections }));
 const defaultSearchLinks = searchValue => {
 	const list = [];
 	const websearch = { collection: 'Web search:', label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` };
@@ -130,12 +158,6 @@ store.compute(
 			: collections
 				.map(collection => searchCollection(collection, searchValue))
 				.filter(collection => collection.links.length)
-)
-
-store.compute(
-	'sortedCollections', 
-	['collections'], 
-	sortCollections
 )
 
 store.compute(

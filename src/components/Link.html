@@ -1,4 +1,4 @@
-<a href="{{ link.url }}" target="_self" on:click="handleClick(event)">{{ link.label }}<small>{{ link.url }}</small></a> 
+<a href="{{ link.url }}" target="_self" on:click="handleClick(event)" data-link-id="{{ link.id }}">{{ link.label }}<small>{{ link.url }}</small></a> 
 {{#if editing}}<button class="edit-button" on:click="goEdit()">Edit</button>{{/if}}
 <Dialog 
 	title="Edit link"

@@ -1,4 +1,4 @@
-<details ref:details open="{{ expanded }}">
+<details ref:details open="{{ expanded }}" class="{{ dragover ? 'dragover' : '' }}">
 	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
 		<h2 class="title">{{ title }}</h2>
 		{{#if editing}}
@@ -6,7 +6,7 @@
 		{{/if}}
 	</summary>
 	<ul>
-		{{#each links as link @url}}
+		{{#each links as link @id}}
 			<li>
 				<Link 
 					:link
@@ -84,6 +84,14 @@
 	.edit-button {
 		margin-left: var(--grid-gap);
 	}
+
+	.dragover {
+		background-color: red;
+	}
+
+	.dragover > * {
+		pointer-events: none;
+	}
 </style>
 
 <script>
@@ -101,7 +109,8 @@
 
 		data() {
 			return {
-				titleEditing: false
+				titleEditing: false,
+				dragover: false,
 			}
 		},
 		components: {

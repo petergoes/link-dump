@@ -1,6 +1,12 @@
-<ul>
-	{{#each $sortedCollections as collection}}
-		<li class="group-container">
+<ul ref:list>
+	{{#each $collections as collection}}
+		<li 
+			class="
+				group-container 
+				{{dragging ? 'dragging' : ''}}
+				{{draggingOrigin === collection.id ? 'dragging-origin' : ''}}
+				{{draggingOver === collection.id ? 'dragging-over' : ''}}" 
+			data-collection-id="{{ collection.id }}">
 			<LinkGroup 
 				links="{{ collection.links }}" 
 				title="{{ collection.title }}" 
@@ -23,6 +29,22 @@
 		grid-gap: var(--grid-gap);
 		margin-bottom: var(--grid-gap);
 	}
+
+	li {
+		border: 5px dashed transparent;
+	}
+
+	.dragging-origin {
+		border-color: var(--code-value);
+	}
+
+	.dragging:not(.dragging-origin) > * {
+		pointer-events: none;
+	}
+
+	.dragging-over:not(.dragging-origin) {
+		border-color: var(--code-keyword);
+	}
 </style>
 
 <script>
@@ -34,7 +56,37 @@
 		data() {
 			return {
 				editing: false,
+				dragging: false,
+				draggingOrigin: null,
+				draggingOver: null,
 			}
+		},
+		oncreate() {
+			this.refs.list.addEventListener('dragstart', event => {
+				const targetGroup = event.path.find(element => element.classList.contains('group-container'));
+				const targetLink = event.path.find(element => element.dataset.linkId);
+				const draggingOrigin = targetGroup.dataset.collectionId;
+				this.set({ dragging: targetLink, draggingOrigin })
+			});
+			this.refs.list.addEventListener("dragover", event => event.preventDefault(), false);
+			this.refs.list.addEventListener('dragenter', event => {
+				const targetGroup = event.path.find(
+					element => element.classList && element.classList.contains('group-container')
+				);
+				if (targetGroup) {
+					this.set({ draggingOver: targetGroup.dataset.collectionId });
+				}
+			})
+			this.refs.list.addEventListener("drop", event => {
+				event.preventDefault();
+				const targetGroup = event.path.find(element => element.classList.contains('group-container'));
+				const targetCollectionId = targetGroup.dataset.collectionId;
+				const sourceLink = this.get('dragging');
+				const originCollectionId = this.get('draggingOrigin');
+				const linkId = sourceLink.dataset.linkId;
+				this.store.moveLink(linkId, originCollectionId, targetCollectionId);
+				this.set({dragging: null, draggingOrigin: null, draggingOver: null})
+			})
 		},
 		components: {
 			LinkGroup,
