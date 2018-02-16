@@ -38,13 +38,13 @@
 		oncreate() {
 			window.addEventListener('keydown', event => {
 				// keyCode = a
-				if(event.keyCode === 65 && event.metaKey) {
+				if(event.keyCode === 65 && event.metaKey && event.shiftKey) {
 					this.refs.addLink.show();
 					return;
 				}
 
-				// keyCode = d
-				if(event.keyCode === 68 && event.metaKey) {
+				// keyCode = s
+				if(event.keyCode === 83 && event.metaKey && event.shiftKey) {
 					this.refs.addCollection.show()
 					return;
 				}
