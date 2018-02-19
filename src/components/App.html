@@ -37,17 +37,21 @@
 		store: () => store,
 		oncreate() {
 			window.addEventListener('keydown', event => {
-				// keyCode = a
-				if(event.keyCode === 65 && event.metaKey && event.shiftKey) {
+				const allModifiers = event.ctrlKey && event.altKey && event.metaKey;
+
+				// keyCode = b
+				if(event.keyCode === 66 && allModifiers) {
 					this.refs.addLink.show();
 					return;
 				}
 
-				// keyCode = s
-				if(event.keyCode === 83 && event.metaKey && event.shiftKey) {
+				// keyCode = n
+				if(event.keyCode === 78 && allModifiers) {
 					this.refs.addCollection.show()
 					return;
 				}
+
+				// keyCode = m (keycode === 77)
 
 				// keycode = e
 				if(event.keyCode === 69 && event.metaKey) {
