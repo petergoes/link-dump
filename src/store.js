@@ -3,6 +3,7 @@ import pipe from 'lodash/fp/pipe';
 import map from 'lodash/fp/map';
 import filter from 'lodash/fp/filter';
 import pick from 'lodash/fp/pick';
+import { doesStringMatchSearchValue } from './utils';
 
 class LinksStore extends Store {
 	async updateStore(newState) {
@@ -194,30 +195,6 @@ function searchCollection(collection, searchValue) {
 	return Object.assign({}, collection, { links });
 }
 
-function getWordsFromString(str) {
-	return str.split(' ');
-}
-
-function getREFromString(str) {
-	return new RegExp(str, 'i');
-}
-
-function doesStringMatchSearchValue(sv) {
-	return function getTestPipeline(string) {
-		return pipe(
-			getWordsFromString, 
-			filter(str => str.length), 
-			map(getREFromString),
-			stringMatchesEveryRE(string),
-		)(sv);
-	}
-}
-
-function stringMatchesEveryRE(str) {
-	return function testREsOnString(res) { 
-		return res.every(re => str.match(re));
-	}
-}
 // store.observe('collections', collections => {
 // 	const now = new Date(Date.now());
 // 	const hours = `${now.getHours()}`.length === 1 ? `0${now.getHours()}` : now.getHours();
