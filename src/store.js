@@ -161,6 +161,15 @@ store.compute(
 )
 
 store.compute(
+	'allLinks',
+	['collections'],
+	collections => collections.reduce((list, collection) => {
+		const links = collection.links.map(link => Object.assign({}, link, { collection }))
+		return list.concat(links);
+	}, [])
+)
+
+store.compute(
 	'collectionNames', 
 	['collections'], 
 	pipe(sortCollections, map(pick(['title', 'id'])))

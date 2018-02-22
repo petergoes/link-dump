@@ -6,6 +6,7 @@
 		{{#if editing}}
 		<button on:click="showAddLinkModal()">Add link</button>
 		<button on:click="showAddCollectionModal()">Add collection</button>
+		<button on:click="showMoveLinksModal()">Move Links</button>
 		{{/if}}
 		<button on:click="set({ editing: !editing })">Edit</button>
 	</aside>
@@ -13,6 +14,7 @@
 <PageFooter />
 <AddCollection ref:addCollection/>
 <AddLink ref:addLink/>
+<MoveLinks ref:moveLinks />
 
 <style>
 	@import 'reset.css';
@@ -28,6 +30,7 @@
 	import AddCollection from './AddCollection.html';
 	import AddLink from './AddLink.html';
 	import GroupCollection from './GroupCollection.html';
+	import MoveLinks from './MoveLinks.html';
 	import PageFooter from './PageFooter.html';
 	import PageHeader from './PageHeader.html';
 	import Search from './Search.html';
@@ -51,7 +54,11 @@
 					return;
 				}
 
-				// keyCode = m (keycode === 77)
+				// keyCode = m
+				if(event.keyCode === 77 && allModifiers) {
+					this.refs.moveLinks.show()
+					return;
+				}
 
 				// keycode = e
 				if(event.keyCode === 69 && event.metaKey) {
@@ -91,6 +98,7 @@
 			AddCollection,
 			AddLink,
 			GroupCollection,
+			MoveLinks,
 			PageFooter,
 			PageHeader,
 			Search,
@@ -101,6 +109,9 @@
 			},
 			showAddCollectionModal() {
 				this.refs.addCollection.show();
+			},
+			showMoveLinksModal() {
+				this.refs.moveLinks.show();
 			},
 		}
 	}

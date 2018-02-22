@@ -1,0 +1,99 @@
+<Dialog 
+	title="Move Links"
+	ref:dialog
+	on:close="onClose(event)">
+	<label>
+		<span>Link title:</span>
+		<input ref:searchInput bind:value="searchValue" type="search" />
+	</label>
+
+	<ul>
+		{{#each foundLinks as link}}
+			<li>
+				<label>
+					<input 
+						type="checkbox"
+						disabled="{{ link.collection.id === targetCollection }}"
+						bind:checked="link.checked">
+					<span>{{ link.label }} <small>- {{ link.collection.title }}</small></span>
+				</label>
+			</li>
+		{{/each}}
+	</ul>
+
+	<label>
+		<span>To collection</span>
+		<select bind:value="targetCollection">
+			{{#each $collectionNames as collection, i}}
+				<option value="{{ collection.id }}">{{ collection.title }}</option>
+			{{/each}}
+		</select>
+	</label>
+</Dialog>
+
+<script>
+	import Dialog from './Dialog.html';
+	import store from '../store';
+	import { doesStringMatchSearchValue } from '../utils';
+
+	export default {
+		store: () => store,
+		data() {
+			return {
+				searchValue: '',
+				targetCollection: '',
+				foundLinks: [],
+			}
+		},
+		oncreate() {
+			this.observe('searchValue', searchValue => {
+				const testSearchValue = doesStringMatchSearchValue(searchValue);
+				const targetCollection = this.get('targetCollection');
+				const links = this.store.get('allLinks')
+					.filter(link => testSearchValue(link.label))
+					.map(link => Object.assign({}, link, { checked: link.collection.id !== targetCollection }));
+
+				this.set({ foundLinks: searchValue.length ? links : [] });
+			});
+
+			const firstCollection = this.store.get('collectionNames')[0] || { id: '' };
+
+			this.observe('targetCollection', targetCollection => {
+				const foundLinks = this.get('foundLinks')
+					.map(link => Object.assign({}, link, { checked: link.collection.id !== targetCollection }))
+				this.set({ foundLinks });
+			})
+
+			this.set({ targetCollection: firstCollection.id });
+
+			this.refs.searchInput.addEventListener('keydown', event => {
+				if(event.keyCode === 27 && this.get('searchValue') === '') {
+					this.refs.dialog.cancel()
+					return;
+				}
+			});
+		},
+		components: {
+			Dialog,
+		},
+		methods: {
+			show() {
+				this.refs.dialog.show();
+			},
+			onClose(action) {
+				if (action === 'confirm') {
+					const targetCollection = this.get('targetCollection');
+					const linksToMove = this.get('foundLinks')
+						.filter(link => link.checked)
+						.map(link => ({linkId: link.id, originCollection: link.collection.id, targetCollection }));
+
+					linksToMove.forEach(({linkId, originCollection, targetCollection}, index) => {
+						setTimeout(() => {
+							this.store.moveLink(linkId, originCollection, targetCollection);
+						}, (index + 1) * 150)
+					});
+				}
+			}
+		}
+	}
+</script>
