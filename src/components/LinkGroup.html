@@ -5,7 +5,7 @@
 			<button class="edit-button" on:click="editTitle()">Edit</button>
 		{{/if}}
 	</summary>
-	<ul>
+	<ul data-link-list>
 		{{#each links as link @id}}
 			<li>
 				<Link 

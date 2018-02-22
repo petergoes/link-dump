@@ -8,7 +8,10 @@ import { doesStringMatchSearchValue } from './utils';
 class LinksStore extends Store {
 	async updateStore(newState) {
 		const collections = { collections: newState.collections };
-		localStorage.setItem('state', JSON.stringify(collections));
+		const isTest = localStorage.getItem('is-test');
+		if (!isTest) {
+			localStorage.setItem('state', JSON.stringify(collections));
+		}
 		this.set(newState);
 	}
 
@@ -176,7 +179,7 @@ store.compute(
 	pipe(sortCollections, map(pick(['title', 'id'])))
 )
 
-function sortCollections(collections) {
+function sortCollections(collections = []) {
 	return collections
 		.map(collection => {
 			return Object.assign({}, collection, { totalClicks: getTotalClicks(collection.links) })
