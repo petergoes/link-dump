@@ -29,7 +29,8 @@
     "dev": "serve public & rollup --config --watch",
     "start": "serve public",
     "predeploy": "workbox generate:sw",
-    "deploy": "npm test & node scripts/deploy.js",
+    "predeploy": "npm test",
+    "deploy": "node scripts/deploy.js",
     "test": "ava"
   },
   "dependencies": {
