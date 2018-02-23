@@ -1,14 +1,22 @@
-async function test (browser, url, t) {
-	const groupSelector = '[data-group-collection]';
-	const linkListSelector = '[data-link-list]';
-	const firstCollectionSelector = `${groupSelector} > :nth-child(1)`;
-	const secondCollectionSelector = `${groupSelector} > :nth-child(2)`;
-	const thirdCollectionSelector = `${groupSelector} > :nth-child(3)`;
-	const firstLinkSelector = `${linkListSelector} > :nth-child(1) a`;
-	const secondLinkSelector = `${linkListSelector} > :nth-child(2) a`;
+const {
+	groupSelector: _groupSelector, 
+	linkListSelector: _linkListSelector, 
+	collectionSelector: _collectionSelector, 
+	linkSelector: _linkSelector,
+} = require('./test-utils');
 
+async function test (browser, url, t) {
 	const page = await browser.newPage();
 	await page.goto(url, { waitUntil: 'load' });
+
+	const groupSelector = _groupSelector();
+	const linkListSelector = _linkListSelector();
+	const firstCollectionSelector = _collectionSelector(1);
+	const secondCollectionSelector = _collectionSelector(2);
+	const thirdCollectionSelector = _collectionSelector(3);
+	const firstLinkSelector = _linkSelector(1);
+	const secondLinkSelector = _linkSelector(2);
+
 	const totalCollections = await page.$$eval(`${groupSelector} > *`, el => el.length);
 	const firstVisualCollectionId = await page.$eval(`${firstCollectionSelector}`, el => el.dataset.collectionId);
 	const firstVisualCollectionTitle = await page.$eval(`${firstCollectionSelector} .title`, el => el.innerHTML);
