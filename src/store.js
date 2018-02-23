@@ -128,6 +128,9 @@ const initialValue = {
 	collections: [],
 	searchValue: ''
 };
+
+const twoWeeks = 14 * 24 * 60 * 60 * 1000;
+const twoWeeksAgo = Date.now() - twoWeeks;
 const collectionsState = JSON.parse(localStorage.getItem('state') || "{}");
 const sortedCollections = sortCollections(collectionsState.collections);
 const store = new LinksStore(Object.assign({}, initialValue, { collections: sortedCollections }));
@@ -151,17 +154,6 @@ store.compute(
 			}, [])
 		return foundLinks.length ? foundLinks : defaultSearchLinks(searchValue);
 	}
-)
-
-store.compute(
-	'filteredCollections',
-	['collections', 'searchValue'],
-	(collections, searchValue) => 
-		searchValue === ''
-			? collections
-			: collections
-				.map(collection => searchCollection(collection, searchValue))
-				.filter(collection => collection.links.length)
 )
 
 store.compute(
@@ -189,7 +181,10 @@ function sortCollections(collections = []) {
 }
 
 function getTotalClicks(links) {
-	return links.reduce((total, link) => total + link.clicks.length, 0);
+	return links.reduce((total, link) => {
+		const recentClicks = link.clicks.filter(click => click > twoWeeksAgo)
+		return total + recentClicks.length;
+	}, 0);
 }
 
 function searchCollection(collection, searchValue) {
