@@ -24,7 +24,6 @@
 			add() {
 				const title = this.refs.title.value;
 				this.store.addCollection(title);
-				this.refs.dialog.close();
 			},
 			onClose(action) {
 				if (action === 'confirm') {

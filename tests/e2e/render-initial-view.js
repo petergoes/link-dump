@@ -68,6 +68,7 @@ async function test (browser, url, t) {
 	t.is(thirdVisualCollectionFirstLinkTitle, 'link1a');
 	t.is(thirdVisualCollectionSecondLinkId, 'b');
 	t.is(thirdVisualCollectionSecondLinkTitle, 'link1b');
+
 }
 
 module.exports = test;

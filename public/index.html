@@ -10,6 +10,33 @@
 </head>
 
 <body>
+	<script>
+		const oldState = localStorage.getItem('state');
+		oldState && localStorage.setItem('state-bkp', oldState);
+		if (oldState) {
+			const state = JSON.parse(oldState);
+			const collectionsMetaData = state.collections.map(collection => ({ id: collection.id, title: collection.title }));
+			const links = state.collections.reduce((links, collection) => {
+				return links.concat(collection.links);
+			}, []);
+			const linkToCollectionMap = state.collections.reduce((list, collection) => {
+				const links = collection.links.map(link => ({ linkId: link.id, collectionId: collection.id }));
+				return list.concat(links);
+			}, []);
+			const expandedCollections = state.collections.reduce((list, collection) => {
+				if (collection.expanded) {
+					return list.concat(collection.id);
+				} else {
+					return list;
+				}
+			}, [])
+			localStorage.setItem('expandedCollections', JSON.stringify(expandedCollections))
+			localStorage.setItem('collectionsMetaData', JSON.stringify(collectionsMetaData))
+			localStorage.setItem('links', JSON.stringify(links))
+			localStorage.setItem('linkToCollectionMap', JSON.stringify(linkToCollectionMap))
+			localStorage.removeItem('state');
+		}
+	</script>
 	<script src='bundle.js'></script>
 </body>
 </html>

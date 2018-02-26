@@ -5,7 +5,7 @@
 	<label>
 		<span>Collection</span>		
 		<select ref:collection>
-			{{#each $collectionNames as collection}}
+			{{#each $collectionsMetaData as collection}}
 				<option value="{{ collection.id }}">{{ collection.title }}</option>
 			{{/each}}
 		</select>

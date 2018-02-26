@@ -13,9 +13,9 @@
 				id="{{ collection.id }}"
 				expanded="{{ collection.expanded }}"
 				:editing
-				on:link="store.updateLink(collection.id, event)"
+				on:link="store.updateLink(event)"
 				on:title="store.updateTitle(collection.id, event)"
-				on:deletelink="store.deleteLink(collection.id, event)"
+				on:deletelink="store.deleteLink(event)"
 				on:deletegroup="store.deleteCollection(collection.id)"
 				on:expandGroup="store.expandCollection(collection.id, event)" />
 		</li>
@@ -84,7 +84,7 @@
 				const sourceLink = this.get('dragging');
 				const originCollectionId = this.get('draggingOrigin');
 				const linkId = sourceLink.dataset.linkId;
-				this.store.moveLink(linkId, originCollectionId, targetCollectionId);
+				this.store.moveLink(linkId, targetCollectionId);
 				this.set({dragging: null, draggingOrigin: null, draggingOver: null})
 			})
 		},

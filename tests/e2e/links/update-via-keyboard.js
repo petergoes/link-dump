@@ -37,10 +37,12 @@ async function test (browser, url, t) {
 	await pause(100);
 
 	const firstCollectionSelector = _collectionSelector(1);
-	const firstLinkSelector = _linkSelector(2);
+	const firstLinkSelector = _linkSelector(1);
 	const firstCollectionSecondLinkTitle = await page.$eval(`${firstCollectionSelector} ${firstLinkSelector}`, el => el.innerText);
 
 	t.is(firstCollectionSecondLinkTitle, 'foo');
+
+	// await pause(30000);
 }
 
 module.exports = test;

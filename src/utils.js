@@ -2,6 +2,10 @@ import pipe from 'lodash/fp/pipe';
 import map from 'lodash/fp/map';
 import filter from 'lodash/fp/filter';
 
+function cloneArray(arr) {
+	return JSON.parse(JSON.stringify(arr));
+}
+
 function getWordsFromString(str) {
 	return str.split(' ');
 }
@@ -25,4 +29,18 @@ export function doesStringMatchSearchValue(sv) {
 			stringMatchesEveryRE(string),
 		)(sv);
 	}
+}
+
+export function removeItemFromArray(array, item) {
+	return array.filter(arrayItem => arrayItem !== item);
+}
+
+export function addItemIfMissing(array, item) {
+	return array.includes(item) ? array : array.concat(item);
+}
+
+export function addInFront(array, item) {
+	const arr = cloneArray(array);
+	arr.unshift(item)
+	return arr;
 }
