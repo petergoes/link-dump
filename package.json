@@ -30,7 +30,7 @@
     "build": "rollup --config",
     "dev": "serve public & rollup --config --watch",
     "start": "serve public",
-    "predeploy": "npm test && workbox generate:sw",
+    "predeploy": "npm run test:e2e && workbox generate:sw",
     "deploy": "node scripts/deploy.js",
     "test:e2e": "ava test-e2e.js",
     "test:unit": "ava test-unit.js"

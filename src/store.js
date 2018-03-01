@@ -36,8 +36,8 @@ class LinksStore extends Store {
 	addCollection(title) {
 		const id = `${Date.now()}`;
 		const collectionsMetaDataItem = { id, title };
-		const collectionsMetaData = addInFront(this.get('collectionsMetaData'), collectionsMetaDataItem);
-		const expandedCollections = addItemIfMissing(this.get('expandedCollections'), id);
+		const collectionsMetaData = addInFront(collectionsMetaDataItem, this.get('collectionsMetaData'));
+		const expandedCollections = addItemIfMissing(id, this.get('expandedCollections'));
 		this.updateStore({ collectionsMetaData, expandedCollections });
 	}
 	updateLink(newLinkState) {
@@ -72,15 +72,15 @@ class LinksStore extends Store {
 			.forEach(id => this.deleteLink(id));
 
 		const collectionsMetaData = this.get('collectionsMetaData').filter(data => data.id !== collectionId);
-		const expandedCollections = removeItemFromArray(this.get('expandedCollections'), collectionId);
+		const expandedCollections = removeItemFromArray(collectionId, this.get('expandedCollections'));
 
 		this.updateStore({ collectionsMetaData, expandedCollections });
 	}
 	expandCollection(collectionId, expanded) {
 		const currentExpandedCollections = this.get('expandedCollections');
 		const expandedCollections = expanded 
-			? addItemIfMissing(currentExpandedCollections, collectionId)
-			: removeItemFromArray(currentExpandedCollections, collectionId)
+			? addItemIfMissing(collectionId, currentExpandedCollections)
+			: removeItemFromArray(collectionId, currentExpandedCollections)
 
 		this.updateStore({ expandedCollections });
 	}
@@ -182,14 +182,6 @@ function searchCollection(collection, searchValue) {
 	const links = collection.links.filter(link => testString(`${link.label} ${collection.title}`));
 	return Object.assign({}, collection, { links });
 }
-
-// store.observe('collections', collections => {
-// 	const now = new Date(Date.now());
-// 	const hours = `${now.getHours()}`.length === 1 ? `0${now.getHours()}` : now.getHours();
-// 	const minutes = `${now.getMinutes()}`.length === 1 ? `0${now.getMinutes()}` : now.getMinutes();
-// 	const seconds = `${now.getSeconds()}`.length === 1 ? `0${now.getSeconds()}` : now.getSeconds();
-// 	console.log(`[${hours}:${minutes}:${seconds}] - Collections changed`);
-// });
 
 window.store = store;
 export default store;

@@ -11,27 +11,6 @@ function testLoader(testPath) {
 	}
 }
 
-// function setInitialState() {
-// 	const initialState = { 
-// 		collections: [
-// 			{ id: '1', title: 'collection1', expanded: true, totalClicks: 0, links: [
-// 				{ id: 'a', label: 'link1a', url: 'http://localhost:5000/link1a', clicks: [] },
-// 				{ id: 'b', label: 'link1b', url: 'http://localhost:5000/link1b', clicks: [] }
-// 			] },
-// 			{ id: '2', title: 'collection2', expanded: true, totalClicks: 0, links: [
-// 				{ id: 'c', label: 'link2c', url: 'http://localhost:5000/link2c', clicks: [] },
-// 				{ id: 'd', label: 'link2d', url: 'http://localhost:5000/link2d', clicks: [Date.now()] }
-// 			] },
-// 			{ id: '3', title: 'collection3', expanded: true, totalClicks: 0, links: [
-// 				{ id: 'e', label: 'link3e', url: 'http://localhost:5000/link3e', clicks: [] },
-// 				{ id: 'f', label: 'link3f', url: 'http://localhost:5000/link3f', clicks: [] }
-// 			] }
-// 		]
-// 	}
-// 	localStorage.setItem('state', JSON.stringify(initialState));
-// 	localStorage.setItem('is-test', 'true');
-// }
-
 function setInitialState() {
 	const expandedCollections = ["1","2","3"];
 	const collectionsMetaData = [
