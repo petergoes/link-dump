@@ -128,11 +128,13 @@ store.compute(
 					.filter(map => map.collectionId === collection.id)
 					.map(map => links.find(link => map.linkId === link.id));
 				const expanded = expandedCollections.includes(collection.id);
+				const recentClicks = getRecentClicks(linksInCollection);
 				const totalClicks = getTotalClicks(linksInCollection);
 				return Object.assign({}, collection, 
 					{ 
 						links: linksInCollection,
 						expanded,
+						recentClicks,
 						totalClicks,
 					}
 				);
@@ -167,14 +169,19 @@ store.compute(
 function sortCollections(collections = []) {
 	return collections
 		.sort((a, b) => a.totalClicks - b.totalClicks)
+		.sort((a, b) => a.recentClicks - b.recentClicks)
 		.reverse()
 }
 
-function getTotalClicks(links) {
+function getRecentClicks(links) {
 	return links.reduce((total, link) => {
 		const recentClicks = link.clicks.filter(click => click > twoWeeksAgo)
 		return total + recentClicks.length;
 	}, 0);
+}
+
+function getTotalClicks(links) {
+	return links.reduce((total, link) => total + link.clicks.length, 0);
 }
 
 function searchCollection(collection, searchValue) {
