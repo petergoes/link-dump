@@ -12,7 +12,6 @@ import {
 
 class LinksStore extends Store {
 	async updateStore(newState) {
-		const collections = { collections: newState.collections };
 		const isTest = localStorage.getItem('is-test');
 		if (!isTest) {
 			Object.keys(newState).forEach(key => {
@@ -20,6 +19,23 @@ class LinksStore extends Store {
 			});
 		}
 		this.set(newState);
+	}
+
+	followLink(id) {
+		let url;
+		const links = this.get('links').map(link => {
+			if (link.id === id) {
+				url = link.url;
+				link.clicks = link.clicks.concat(Date.now());
+			}
+			return link;
+		})
+		if (url) {
+			this.updateStore({ links });
+			setTimeout(() => {
+				window.location.replace(url);
+			}, 10);
+		}
 	}
 
 	addLink(collectionId, label, url) {

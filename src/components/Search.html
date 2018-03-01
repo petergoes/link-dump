@@ -43,7 +43,7 @@
 				const links = this.store.get('searchedlinks');
 				//keycode enter
 				if(event.keyCode === 13 && links.length) {
-					window.location.replace(links[0].url);
+					this.store.followLink(links[0].id);
 				}
 
 				if(event.keyCode === 40) {

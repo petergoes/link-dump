@@ -70,8 +70,10 @@
 
 <script>
 	import Dialog from './Dialog.html';
+	import store from '../store';
 
 	export default {
+		store: () => store,
 		components: {
 			Dialog,
 		},
@@ -86,10 +88,8 @@
 			deleteLink() { this.fire('delete', this.options.data.link.id); },
 			handleClick(event) {
 				event.preventDefault();
-				const { clicks, url } = this.options.data.link;
-				const newState = Object.assign({}, this.options.data.link, { clicks: clicks.concat(Date.now()) });
-				this.fire('update', newState);
-				setTimeout(() => { window.location = url }, 10);
+				const { id } = this.options.data.link;
+				this.store.followLink(id);
 			},
 			closeDialog(action) {
 				switch(action) {
