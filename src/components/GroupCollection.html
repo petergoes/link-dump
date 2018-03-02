@@ -12,6 +12,8 @@
 				title="{{ collection.title }}" 
 				id="{{ collection.id }}"
 				expanded="{{ collection.expanded }}"
+				recentClicks="{{ collection.recentClicks }}"
+				totalClicks="{{ collection.totalClicks }}"
 				:editing
 				on:link="store.updateLink(event)"
 				on:title="store.updateTitle(collection.id, event)"

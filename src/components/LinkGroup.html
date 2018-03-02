@@ -1,6 +1,6 @@
 <details ref:details open="{{ expanded }}" class="{{ dragover ? 'dragover' : '' }}">
 	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
-		<h2 class="title">{{ title }}</h2>
+		<h2 class="title" title="Recent clicks: {{ recentClicks }} - Total clicks: {{ totalClicks }}">{{ title }}</h2>
 		{{#if editing}}
 			<button class="edit-button" on:click="editTitle()">Edit</button>
 		{{/if}}
