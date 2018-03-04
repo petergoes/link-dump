@@ -1,6 +1,6 @@
 <details ref:details open="{{ expanded }}" class="{{ dragover ? 'dragover' : '' }}">
 	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
-		<h2 class="title" title="Recent clicks: {{ recentClicks }} - Total clicks: {{ totalClicks }}">{{ title }}</h2>
+		<h3 class="title" title="Recent clicks: {{ recentClicks }} - Total clicks: {{ totalClicks }}">{{ title }}</h3>
 		{{#if editing}}
 			<button class="edit-button" on:click="editTitle()">Edit</button>
 		{{/if}}
@@ -62,7 +62,7 @@
 		justify-content: space-between;
 	}
 
-	h2,
+	.title,
 	summary {
 		display: flex;
 		justify-content: space-between;

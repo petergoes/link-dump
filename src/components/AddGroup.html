@@ -1,15 +1,7 @@
 <Dialog 
-	title="Add Collection"
+	title="Add Group"
 	ref:dialog
 	on:close="onClose(event)">
-	<label>
-		<span>Group</span>		
-		<select ref:group>
-			{{#each $groupsMetaData as group}}
-				<option value="{{ group.id }}">{{ group.title }}</option>
-			{{/each}}
-		</select>
-	</label>
 	<label>
 		<span>Title</span>
 		<input ref:title />
@@ -30,9 +22,8 @@
 				this.refs.dialog.show();
 			},
 			add() {
-				const groupId = this.refs.group.value;
 				const title = this.refs.title.value;
-				this.store.addCollection(groupId, title);
+				this.store.addGroup(title);
 			},
 			onClose(action) {
 				if (action === 'confirm') {

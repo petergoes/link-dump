@@ -13,9 +13,9 @@
 				<label>
 					<input 
 						type="checkbox"
-						disabled="{{ link.collectionMeta.id === targetCollection }}"
+						disabled="{{ link.collection.id === targetCollection }}"
 						bind:checked="link.checked">
-					<span>{{ link.label }} <small>- {{ link.collectionMeta.title }}</small></span>
+					<span>{{ link.label }} <small>- {{ link.collection.title }} ({{ link.collection.group.title }})</small></span>
 				</label>
 			</li>
 		{{/each}}
@@ -24,8 +24,8 @@
 	<label>
 		<span>To collection</span>
 		<select bind:value="targetCollection">
-			{{#each $collectionsMetaData as collection, i}}
-				<option value="{{ collection.id }}">{{ collection.title }}</option>
+			{{#each $collections as collection, i}}
+				<option value="{{ collection.id }}">{{ collection.title }} ({{ collection.group.title }})</option>
 			{{/each}}
 		</select>
 	</label>
@@ -50,7 +50,7 @@
 				const testSearchValue = doesStringMatchSearchValue(searchValue);
 				const targetCollection = this.get('targetCollection');
 				const linkToCollectionObjectMap = this.store.get('linkToCollectionObjectMap');
-				const collectionsMetaData = this.store.get('collectionsMetaData');
+				const collections = this.store.get('collections');
 				const links = this.store.get('links')
 					.filter(link => testSearchValue(link.label))
 					.map(link => Object.assign(
@@ -58,7 +58,7 @@
 						link, 
 						{ 
 							checked: linkToCollectionObjectMap[link.id] !== targetCollection,
-							collectionMeta: collectionsMetaData
+							collection: collections
 								.find(meta => meta.id === linkToCollectionObjectMap[link.id])
 						}
 					));
@@ -66,7 +66,7 @@
 				this.set({ foundLinks: searchValue.length ? links : [] });
 			});
 
-			const firstCollection = this.store.get('collectionsMetaData')[0] || { id: '' };
+			const firstCollection = this.store.get('collections')[0] || { id: '' };
 
 			this.observe('targetCollection', targetCollection => {
 				const foundLinks = this.get('foundLinks')

@@ -1,17 +1,21 @@
 <PageHeader />
 <Search ref:search />
 <main>
-	<GroupCollection :editing />
+	{{#each $groups as group}}
+		<GroupCollection class="group-collection" :editing collections="{{ group.collections }}" title="{{ group.title }}" id="{{ group.id }}"/>
+	{{/each}}
 	<aside class="actions">
 		{{#if editing}}
 		<button on:click="showAddLinkModal()">Add link</button>
 		<button on:click="showAddCollectionModal()">Add collection</button>
+		<button on:click="showAddGroupModal()">Add Group</button>
 		<button on:click="showMoveLinksModal()">Move Links</button>
 		{{/if}}
 		<button on:click="set({ editing: !editing })">Edit</button>
 	</aside>
 </main>
 <PageFooter />
+<AddGroup ref:addGroup/>
 <AddCollection ref:addCollection/>
 <AddLink ref:addLink/>
 <MoveLinks ref:moveLinks />
@@ -24,10 +28,15 @@
 	.actions > :last-child {
 		float: right;
 	}
+
+	:global(.group-collection) {
+		margin-bottom: 1rem;
+	}
 </style>
 
 <script>
 	import AddCollection from './AddCollection.html';
+	import AddGroup from './AddGroup.html';
 	import AddLink from './AddLink.html';
 	import GroupCollection from './GroupCollection.html';
 	import MoveLinks from './MoveLinks.html';
@@ -42,15 +51,21 @@
 			window.addEventListener('keydown', event => {
 				const allModifiers = event.ctrlKey && event.altKey && event.metaKey;
 
+				// keyCode = v
+				if(event.keyCode === 86 && allModifiers) {
+					this.refs.addLink.show();
+					return;
+				}
+
 				// keyCode = b
 				if(event.keyCode === 66 && allModifiers) {
-					this.refs.addLink.show();
+					this.refs.addCollection.show();
 					return;
 				}
 
 				// keyCode = n
 				if(event.keyCode === 78 && allModifiers) {
-					this.refs.addCollection.show()
+					this.refs.addGroup.show()
 					return;
 				}
 
@@ -96,6 +111,7 @@
 		},
 		components: {
 			AddCollection,
+			AddGroup,
 			AddLink,
 			GroupCollection,
 			MoveLinks,
@@ -109,6 +125,9 @@
 			},
 			showAddCollectionModal() {
 				this.refs.addCollection.show();
+			},
+			showAddGroupModal() {
+				this.refs.addGroup.show();
 			},
 			showMoveLinksModal() {
 				this.refs.moveLinks.show();

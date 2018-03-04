@@ -49,12 +49,22 @@ class LinksStore extends Store {
 
 		this.updateStore({ links, linkToCollectionMap });
 	}
-	addCollection(title) {
+	addCollection(groupId, title) {
 		const id = `${Date.now()}`;
+		const currentCollectionToGroupMap = this.get('collectionToGroupMap');
 		const collectionsMetaDataItem = { id, title };
+		const collectionToGroupMapItem = { collectionId: id, groupId };
 		const collectionsMetaData = addInFront(collectionsMetaDataItem, this.get('collectionsMetaData'));
 		const expandedCollections = addItemIfMissing(id, this.get('expandedCollections'));
-		this.updateStore({ collectionsMetaData, expandedCollections });
+		const collectionToGroupMap = currentCollectionToGroupMap.concat(collectionToGroupMapItem);
+		this.updateStore({ collectionsMetaData, expandedCollections, collectionToGroupMap });
+	}
+	addGroup(title) {
+		const id = `${Date.now()}`;
+		const groupMetaDataItem = { id, title };
+		const groupsMetaData = this.get('groupsMetaData').concat(groupMetaDataItem);
+		const expandedGroups = addItemIfMissing(id, this.get('expandedGroups'));
+		this.updateStore({ groupsMetaData, expandedGroups });
 	}
 	updateLink(newLinkState) {
 		const id = newLinkState.id;
@@ -63,7 +73,7 @@ class LinksStore extends Store {
 
 		this.updateStore({ links });
 	}
-	updateTitle(collectionId, newTitle) {
+	updateCollectionTitle(collectionId, newTitle) {
 		const collectionsMetaData = this.get('collectionsMetaData')
 			.map(collection => 
 				collection.id === collectionId
@@ -72,6 +82,16 @@ class LinksStore extends Store {
 			)
 
 		this.updateStore({ collectionsMetaData });
+	}
+	updateGroupTitle(groupId, newTitle) {
+		const groupsMetaData = this.get('groupsMetaData')
+			.map(group => 
+				group.id === groupId
+					? Object.assign({}, group, { title: newTitle })
+					: group
+			)
+
+		this.updateStore({ groupsMetaData });
 	}
 	deleteLink(linkId) {
 		const links = this.get('links')
@@ -111,6 +131,9 @@ class LinksStore extends Store {
 }
 
 const initialValue = { 
+	groupsMetaData: [],
+	expandedGroups: [],
+	collectionToGroupMap: [],
 	expandedCollections: [],
 	collectionsMetaData: [], 
 	links: [],
@@ -122,10 +145,12 @@ const twoWeeks = 14 * 24 * 60 * 60 * 1000;
 const twoWeeksAgo = Date.now() - twoWeeks;
 
 const expandedCollections = JSON.parse(localStorage.getItem('expandedCollections') || "[]");
+const groupsMetaData = JSON.parse(localStorage.getItem('groupsMetaData') || "[]");
 const collectionsMetaData = JSON.parse(localStorage.getItem('collectionsMetaData') || "[]");
 const links = JSON.parse(localStorage.getItem('links') || "[]");
 const linkToCollectionMap = JSON.parse(localStorage.getItem('linkToCollectionMap') || "[]");
-const store = new LinksStore(Object.assign({}, initialValue, { expandedCollections, collectionsMetaData, links, linkToCollectionMap }));
+const collectionToGroupMap = JSON.parse(localStorage.getItem('collectionToGroupMap') || "[]");
+const store = new LinksStore(Object.assign({}, initialValue, { expandedCollections, collectionsMetaData, links, linkToCollectionMap, groupsMetaData, collectionToGroupMap }));
 const defaultSearchLinks = searchValue => {
 	const list = [];
 	const websearch = { collection: 'Web search:', label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` };
@@ -136,13 +161,17 @@ const defaultSearchLinks = searchValue => {
 
 store.compute(
 	'collections',
-	['collectionsMetaData', 'links', 'linkToCollectionMap', 'expandedCollections'],
-	(collectionsMetaData, links, linkToCollectionMap, expandedCollections) => {
+	['collectionsMetaData', 'links', 'linkToCollectionMap', 'expandedCollections', 'collectionToGroupMap', 'groupsMetaData'],
+	(collectionsMetaData, links, linkToCollectionMap, expandedCollections, collectionToGroupMap, groupsMetaData) => {
 		const collections = collectionsMetaData
 			.map(collection => {
 				const linksInCollection = linkToCollectionMap
 					.filter(map => map.collectionId === collection.id)
 					.map(map => links.find(link => map.linkId === link.id));
+				const group = collectionToGroupMap
+					.filter(map => map.collectionId === collection.id)
+					.map(map => groupsMetaData.find(meta => meta.id === map.groupId))
+					.find((_, index) => index === 0);
 				const expanded = expandedCollections.includes(collection.id);
 				const recentClicks = getRecentClicks(linksInCollection);
 				const totalClicks = getTotalClicks(linksInCollection);
@@ -152,10 +181,23 @@ store.compute(
 						expanded,
 						recentClicks,
 						totalClicks,
+						group,
 					}
 				);
 			});
 		return sortCollections(collections);
+	})
+
+store.compute(
+	'groups',
+	['groupsMetaData', 'collectionToGroupMap', 'collections'], 
+	(groupsMetaData, collectionToGroupMap, collections) => {
+		return groupsMetaData.map(group => {
+			const collectionInGroup = collectionToGroupMap
+					.filter(map => map.groupId === group.id)
+					.map(map => collections.find(collection => map.collectionId === collection.id));
+			return Object.assign({}, group, { collections: collectionInGroup });
+		});
 	})
 
 store.compute(
@@ -175,7 +217,7 @@ store.compute(
 		const foundLinks = collections
 			.map(collection => searchCollection(collection, searchValue))
 			.reduce((list, collection) => {
-				const links = collection.links.map(link => Object.assign({}, link, { collection: collection.title }))
+				const links = collection.links.map(link => Object.assign({}, link, { collection }))
 				return list.concat(links);
 			}, [])
 		return foundLinks.length ? foundLinks : defaultSearchLinks(searchValue);

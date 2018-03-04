@@ -1,30 +1,77 @@
-<ul ref:list data-group-collection>
-	{{#each $collections as collection}}
-		<li 
-			class="
-				group-container 
-				{{dragging ? 'dragging' : ''}}
-				{{draggingOrigin === collection.id ? 'dragging-origin' : ''}}
-				{{draggingOver === collection.id ? 'dragging-over' : ''}}" 
-			data-collection-id="{{ collection.id }}">
-			<LinkGroup 
-				links="{{ collection.links }}" 
-				title="{{ collection.title }}" 
-				id="{{ collection.id }}"
-				expanded="{{ collection.expanded }}"
-				recentClicks="{{ collection.recentClicks }}"
-				totalClicks="{{ collection.totalClicks }}"
-				:editing
-				on:link="store.updateLink(event)"
-				on:title="store.updateTitle(collection.id, event)"
-				on:deletelink="store.deleteLink(event)"
-				on:deletegroup="store.deleteCollection(collection.id)"
-				on:expandGroup="store.expandCollection(collection.id, event)" />
-		</li>
-	{{/each}}
-</ul>
+<details open :class>
+	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
+		<h2 class="title">{{ title }}</h2>
+		{{#if editing}}
+			<button class="edit-button" on:click="editTitle()">Edit</button>
+		{{/if}}
+	</summary>
+	<ul ref:list data-group-collection>
+		{{#each collections as collection}}
+			<li 
+				class="
+					group-container 
+					{{dragging ? 'dragging' : ''}}
+					{{draggingOrigin === collection.id ? 'dragging-origin' : ''}}
+					{{draggingOver === collection.id ? 'dragging-over' : ''}}" 
+				data-collection-id="{{ collection.id }}">
+				<LinkGroup 
+					links="{{ collection.links }}" 
+					title="{{ collection.title }}" 
+					id="{{ collection.id }}"
+					expanded="{{ collection.expanded }}"
+					recentClicks="{{ collection.recentClicks }}"
+					totalClicks="{{ collection.totalClicks }}"
+					:editing
+					on:link="store.updateLink(event)"
+					on:title="store.updateCollectionTitle(collection.id, event)"
+					on:deletelink="store.deleteLink(event)"
+					on:deletegroup="store.deleteCollection(collection.id)"
+					on:expandGroup="store.expandCollection(collection.id, event)" />
+			</li>
+		{{/each}}
+	</ul>
+</details>
+<Dialog 
+	title="Edit Group"
+	ref:dialog
+	actionButtons="{{ [
+		{label: 'Ok', value: 'confirm'},
+		{label: 'Delete', value: 'delete'}
+	] }}"
+	on:close="closeDialog(event)">
+	<label>
+		<span>Title</span>
+		<input ref:title value="{{ title }}"/>
+	</label>
+</Dialog>
 
 <style>
+	details summary:before {
+		content: "+";
+		transform: translateX(-100%);
+	}
+	details[open] summary:before {
+		content: "-";
+	}
+
+	summary {
+		padding-bottom: 0.25rem;
+		margin-bottom: 0.25rem;
+		display: flex;
+	}
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	summary:hover,
+	summary:active,
+	summary:focus {
+		outline-color: var(--code-keyword);
+		outline-width: 1px;
+		outline-style: solid;
+		outline-offset: 1px;
+	}
+
 	ul {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -34,6 +81,21 @@
 
 	li {
 		border: 5px dashed transparent;
+	}
+
+	.title,
+	summary {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	summary {
+		border-bottom: 1px solid var(--code-background);
+	}
+
+	.edit-button {
+		margin-left: var(--grid-gap);
 	}
 
 	.dragging-origin {
@@ -50,8 +112,12 @@
 </style>
 
 <script>
+	import mitt from 'mitt';
+	import Dialog from './Dialog.html';
 	import LinkGroup from './LinkGroup.html';
 	import store from '../store';
+
+	const emitter = mitt();
 
 	export default {
 		store: () => store,
@@ -64,11 +130,16 @@
 			}
 		},
 		oncreate() {
+			emitter.on('GroupCollection:drop', () => { this.set({dragging: false, draggingOrigin: null, draggingOver: null} )});
+			emitter.on('GroupCollection:dragstart', () => { this.set({dragging: true} )});
+
 			this.refs.list.addEventListener('dragstart', event => {
 				const targetGroup = event.path.find(element => element.classList.contains('group-container'));
 				const targetLink = event.path.find(element => element.dataset.linkId);
 				const draggingOrigin = targetGroup.dataset.collectionId;
-				this.set({ dragging: targetLink, draggingOrigin })
+				event.dataTransfer.setData('text/plain', targetLink.dataset.linkId);
+				this.set({ draggingOrigin })
+				emitter.emit('GroupCollection:dragstart');
 			});
 			this.refs.list.addEventListener("dragover", event => event.preventDefault(), false);
 			this.refs.list.addEventListener('dragenter', event => {
@@ -83,20 +154,42 @@
 				event.preventDefault();
 				const targetGroup = event.path.find(element => element.classList.contains('group-container'));
 				const targetCollectionId = targetGroup.dataset.collectionId;
-				const sourceLink = this.get('dragging');
-				const originCollectionId = this.get('draggingOrigin');
-				const linkId = sourceLink.dataset.linkId;
+				const linkId = event.dataTransfer.getData("text/plain");
 				this.store.moveLink(linkId, targetCollectionId);
-				this.set({dragging: null, draggingOrigin: null, draggingOver: null})
+				this.set({draggingOrigin: null, draggingOver: null})
+				emitter.emit('GroupCollection:drop');
 			})
 		},
 		components: {
 			LinkGroup,
+			Dialog,
 		},
 		methods: {
 			addCollection() {
 				this.store.addCollection();
 				this.set({editing:true});
+			},
+			editTitle() { 
+				this.set({titleEditing: true}); 
+				this.refs.dialog.show();
+				this.refs.title.focus();
+			},
+			finishEdit() {
+				const groupId = this.options.data.id;
+				this.store.updateGroupTitle(groupId, this.refs.title.value)
+				this.set({ titleEditing: false });
+			},
+			closeDialog(action) {
+				switch(action) {
+					case 'confirm': 
+						this.finishEdit();
+						return;
+					// case 'delete':
+					// 	this.deleteGroup();
+					// 	return;
+					default:
+						return;
+				}
 			}
 		}
 	}

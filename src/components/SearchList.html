@@ -9,7 +9,10 @@
 					class="search-list-link" 
 					tabindex="{{i === 0 ? -1 : 0}}"
 					on:keydown="onkeydown(event)">
-					{{#if link.collection}}<span>{{ link.collection }} - </span>{{/if}}<strong>{{ link.label }}</strong>
+					<strong>{{ link.label }}</strong> - 
+					{{#if link.collection}}
+						<span>{{ link.collection.title }} ({{ link.collection.group.title }})</span>
+					{{/if}}
 				</a>
 			</li>
 		{{/each}}
