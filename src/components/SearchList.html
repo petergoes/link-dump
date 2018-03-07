@@ -17,6 +17,10 @@
 							{{/if}}
 						</span>
 					{{/if}}
+					{{#if link.collection.group.title}}
+						-
+						<small>({{ link.url }})</small>
+					{{/if}}
 				</a>
 			</li>
 		{{/each}}
@@ -52,6 +56,9 @@
 
 	a {
 		padding: 0.25rem;
+		overflow-x: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	a:hover,

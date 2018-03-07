@@ -160,31 +160,8 @@ h1 {
 	font-weight: 700;
 }
 
-a:before {
-	content: '[';
-	opacity: var(--markdown-decoration-fade);
-	color: var(--default-text-color);
-}
-a:after {
-	content: ']';
-	opacity: var(--markdown-decoration-fade);
-	color: var(--default-text-color);
-}
-
 .headerlink:before, .headerlink:after {
 	content: initial;
-}
-
-strong:before, strong:after {
-	content: '*';
-	opacity: var(--markdown-decoration-fade);
-	color: var(--default-text-color);
-}
-
-em:before, i:before, em:after, i:after {
-	content: '_';
-	opacity: var(--markdown-decoration-fade);
-	color: var(--default-text-color);
 }
 
 ol {
