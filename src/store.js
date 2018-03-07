@@ -107,10 +107,11 @@ class LinksStore extends Store {
 			.map(map => map.linkId)
 			.forEach(id => this.deleteLink(id));
 
+		const collectionToGroupMap = this.get('collectionToGroupMap').filter(meta => meta.collectionId !== collectionId);
 		const collectionsMetaData = this.get('collectionsMetaData').filter(data => data.id !== collectionId);
 		const expandedCollections = removeItemFromArray(collectionId, this.get('expandedCollections'));
 
-		this.updateStore({ collectionsMetaData, expandedCollections });
+		this.updateStore({ collectionsMetaData, expandedCollections, collectionToGroupMap });
 	}
 	expandCollection(collectionId, expanded) {
 		const currentExpandedCollections = this.get('expandedCollections');
@@ -153,8 +154,8 @@ const collectionToGroupMap = JSON.parse(localStorage.getItem('collectionToGroupM
 const store = new LinksStore(Object.assign({}, initialValue, { expandedCollections, collectionsMetaData, links, linkToCollectionMap, groupsMetaData, collectionToGroupMap }));
 const defaultSearchLinks = searchValue => {
 	const list = [];
-	const websearch = { collection: 'Web search:', label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` };
-	const navigate = { collection: 'Navigate to:', label: searchValue, url: /^http/.test(searchValue) ? searchValue : `http://${searchValue}` };
+	const websearch = { collection: { title: 'Web search',  group: {title: ''} }, label: searchValue, url: `https://duckduckgo.com/?q=${searchValue}` };
+	const navigate =  { collection: { title: 'Navigate to', group: {title: ''} }, label: searchValue, url: /^http/.test(searchValue) ? searchValue : `http://${searchValue}` };
 	const isUrl = /\.|:/.test(searchValue);
 	return isUrl ? [navigate, websearch] : [websearch, navigate];
 }
@@ -196,7 +197,7 @@ store.compute(
 			const collectionInGroup = collectionToGroupMap
 					.filter(map => map.groupId === group.id)
 					.map(map => collections.find(collection => map.collectionId === collection.id));
-			return Object.assign({}, group, { collections: collectionInGroup });
+			return Object.assign({}, group, { collections: sortCollections(collectionInGroup) });
 		});
 	})
 

@@ -11,6 +11,7 @@ async function test (browser, url, t) {
 
 	await page.keyboard.press('Tab');
 	await page.keyboard.press('Tab');
+	await page.keyboard.press('Tab');
 	await page.keyboard.press('Enter');
 
 	await pause(100)

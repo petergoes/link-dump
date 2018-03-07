@@ -56,27 +56,27 @@ async function cleanup() {
 test.before(setup);
 test.always.after('cleanup', cleanup);
 
-test('render initial view', testLoader('./tests/e2e/render-initial-view.js'));
+test.serial('render initial view', testLoader('./tests/e2e/render-initial-view.js'));
 
 // Links
-test('add new link via keyboard', testLoader('./tests/e2e/links/add-via-keyboard.js'));
-test('update link via keyboard', testLoader('./tests/e2e/links/update-via-keyboard.js'));
-test('delete link via keyboard', testLoader('./tests/e2e/links/delete-via-keyboard.js'));
-test('move links via gui', testLoader('./tests/e2e/links/move-via-keyboard.js'));
-test('activate link via keyboard', testLoader('./tests/e2e/links/activate-via-keyboard.js'));
+test.serial('add new link via keyboard', testLoader('./tests/e2e/links/add-via-keyboard.js'));
+test.serial('update link via keyboard', testLoader('./tests/e2e/links/update-via-keyboard.js'));
+test.serial('delete link via keyboard', testLoader('./tests/e2e/links/delete-via-keyboard.js'));
+test.serial('move links via gui', testLoader('./tests/e2e/links/move-via-keyboard.js'));
+test.serial('activate link via keyboard', testLoader('./tests/e2e/links/activate-via-keyboard.js'));
 
 // Collections
-test('add collection via keyboard', testLoader('./tests/e2e/collections/add-via-keyboard.js'));
-test('update title via keyboard', testLoader('./tests/e2e/collections/update-via-keyboard.js'));
-test('toggle collection via keyboard', testLoader('./tests/e2e/collections/toggle-via-keyboard.js'));
-test('delete collection via keyboard', testLoader('./tests/e2e/collections/delete-via-keyboard.js'));
+test.serial('add collection via keyboard', testLoader('./tests/e2e/collections/add-via-keyboard.js'));
+test.serial('update title via keyboard', testLoader('./tests/e2e/collections/update-via-keyboard.js'));
+test.serial('toggle collection via keyboard', testLoader('./tests/e2e/collections/toggle-via-keyboard.js'));
+test.serial('delete collection via keyboard', testLoader('./tests/e2e/collections/delete-via-keyboard.js'));
 
 // Use search bar
-test('search for links', testLoader('./tests/e2e/search-bar/search-for-links.js'));
+test.serial('search for links', testLoader('./tests/e2e/search-bar/search-for-links.js'));
 test.todo('search for links and move through found link list with keyboard');
 test.todo('search for links and click on link');
-test('navigate to url via search bar', testLoader('./tests/e2e/search-bar/navigate-to.js'));
-test('perform a web search via search bar', testLoader('./tests/e2e/search-bar/web-search.js'));
+test.serial('navigate to url via search bar', testLoader('./tests/e2e/search-bar/navigate-to.js'));
+test.serial('perform a web search via search bar', testLoader('./tests/e2e/search-bar/web-search.js'));
 test.todo('clear search bar with escape');
 test.todo('focus search bar after escape in search list');
 test.todo('focus search bar via shortkeys after tapping');

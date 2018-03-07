@@ -1,5 +1,5 @@
 const {
-	groupSelector: _groupSelector, 
+	collectionsSelector: _collectionsSelector, 
 	linkListSelector: _linkListSelector, 
 	collectionSelector: _collectionSelector, 
 	linkSelector: _linkSelector,
@@ -13,7 +13,7 @@ async function test (browser, url, t) {
 	await page.keyboard.down('Control');
 	await page.keyboard.down('Alt');
 	await page.keyboard.down('Meta');
-	await page.keyboard.press('KeyB');
+	await page.keyboard.press('KeyV');
 	await page.keyboard.up('Control');
 	await page.keyboard.up('Alt');
 	await page.keyboard.up('Meta');

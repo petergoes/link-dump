@@ -19,7 +19,7 @@ async function test (browser, url, t) {
 
 	const firstLink = await page.$eval(`${searchListLink(1)}`, el => el.innerText);
 
-	t.is(firstLink, 'Web search: - petergoes'); 
+	t.is(firstLink, 'petergoes - Web search '); 
 }
 
 module.exports = test;

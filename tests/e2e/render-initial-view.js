@@ -1,15 +1,16 @@
 const {
-	groupSelector: _groupSelector, 
+	collectionsSelector: _collectionsSelector, 
 	linkListSelector: _linkListSelector, 
 	collectionSelector: _collectionSelector, 
 	linkSelector: _linkSelector,
+	pause,
 } = require('./test-utils');
 
 async function test (browser, url, t) {
 	const page = await browser.newPage();
 	await page.goto(url, { waitUntil: 'load' });
 
-	const groupSelector = _groupSelector();
+	const collectionsSelector = _collectionsSelector();
 	const linkListSelector = _linkListSelector();
 	const firstCollectionSelector = _collectionSelector(1);
 	const secondCollectionSelector = _collectionSelector(2);
@@ -17,7 +18,7 @@ async function test (browser, url, t) {
 	const firstLinkSelector = _linkSelector(1);
 	const secondLinkSelector = _linkSelector(2);
 
-	const totalCollections = await page.$$eval(`${groupSelector} > *`, el => el.length);
+	const totalCollections = await page.$$eval(`${collectionsSelector} > *`, el => el.length);
 	const firstVisualCollectionId = await page.$eval(`${firstCollectionSelector}`, el => el.dataset.collectionId);
 	const firstVisualCollectionTitle = await page.$eval(`${firstCollectionSelector} .title`, el => el.innerHTML);
 	const firstVisualCollectionTotalLinks = await page.$$eval(`${firstCollectionSelector} ${linkListSelector} > *`, el => el.length);

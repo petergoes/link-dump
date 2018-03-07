@@ -1,5 +1,5 @@
 const {
-	groupSelector: _groupSelector,
+	collectionsSelector: _collectionsSelector,
 	goIntoEditMode,
 	pause,
 } = require('../test-utils');
@@ -13,6 +13,7 @@ async function test (browser, url, t) {
 	await page.goto(url, { waitUntil: 'load' });
 
 
+	await page.keyboard.press('Tab');
 	await page.keyboard.press('Tab');
 
 	await goIntoEditMode(page);
@@ -28,8 +29,8 @@ async function test (browser, url, t) {
 
 	await pause(100);
 
-	const groupSelector = _groupSelector();
-	const totalCollections = await page.$$eval(`${groupSelector} > *`, el => el.length);
+	const collectionsSelector = _collectionsSelector();
+	const totalCollections = await page.$$eval(`${collectionsSelector} > *`, el => el.length);
 
 	t.is(totalCollections, 2);
 }

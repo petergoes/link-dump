@@ -17,8 +17,8 @@ async function test (browser, url, t) {
 
 	const firstLink = await page.$eval(`${searchListLink(1)}`, el => el.innerText);
 	const secondLink = await page.$eval(`${searchListLink(2)}`, el => el.innerText);
-	t.is(firstLink, 'collection2 - link2c');
-	t.is(secondLink, 'collection2 - link2d');
+	t.is(firstLink, 'link2c - collection2 (Undefined Group)');
+	t.is(secondLink, 'link2d - collection2 (Undefined Group)');
 }
 
 module.exports = test;

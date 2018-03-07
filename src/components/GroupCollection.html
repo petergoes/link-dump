@@ -1,11 +1,11 @@
-<details open :class>
+<details open :class data-group-id="{{ id }}">
 	<summary tabindex="{{ $searchValue === '' ? 0 : -1 }}">
 		<h2 class="title">{{ title }}</h2>
 		{{#if editing}}
 			<button class="edit-button" on:click="editTitle()">Edit</button>
 		{{/if}}
 	</summary>
-	<ul ref:list data-group-collection>
+	<ul ref:list data-group-collections>
 		{{#each collections as collection}}
 			<li 
 				class="

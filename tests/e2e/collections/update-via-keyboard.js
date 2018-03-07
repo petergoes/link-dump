@@ -9,6 +9,7 @@ async function test (browser, url, t) {
 	await page.goto(url, { waitUntil: 'load' });
 
 	await page.keyboard.press('Tab');
+	await page.keyboard.press('Tab');
 
 	await goIntoEditMode(page);
 

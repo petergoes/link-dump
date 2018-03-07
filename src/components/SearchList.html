@@ -11,7 +11,11 @@
 					on:keydown="onkeydown(event)">
 					<strong>{{ link.label }}</strong> - 
 					{{#if link.collection}}
-						<span>{{ link.collection.title }} ({{ link.collection.group.title }})</span>
+						<span>{{ link.collection.title }} 
+							{{#if link.collection.group.title}}
+								({{ link.collection.group.title }})
+							{{/if}}
+						</span>
 					{{/if}}
 				</a>
 			</li>

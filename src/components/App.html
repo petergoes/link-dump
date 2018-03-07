@@ -2,7 +2,7 @@
 <Search ref:search />
 <main>
 	{{#each $groups as group}}
-		<GroupCollection class="group-collection" :editing collections="{{ group.collections }}" title="{{ group.title }}" id="{{ group.id }}"/>
+		<GroupCollection class="group-collection" :editing collections="{{ group.collections }}" title="{{ group.title }}" id="{{ group.id }}" />
 	{{/each}}
 	<aside class="actions">
 		{{#if editing}}

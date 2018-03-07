@@ -14,12 +14,12 @@ async function test (browser, url, t) {
 	await page.keyboard.up('Meta');
 
 	await page.keyboard.type('petergoes.nl');
-	
+
 	await pause(100);
 
 	const firstLink = await page.$eval(`${searchListLink(1)}`, el => el.innerText);
 
-	t.is(firstLink, 'Navigate to: - petergoes.nl'); 
+	t.is(firstLink, 'petergoes.nl - Navigate to '); 
 }
 
 module.exports = test;
