@@ -54,6 +54,12 @@
 					event.preventDefault();
 					this.refs.searchList.focusSecondItem()
 				}
+
+				// arrow key
+				if (event.keyCode === 39 && links.length) {
+					console.log('fill', links[0].url)
+					this.refs.inputSearch.value = links[0].url;
+				}
 			})
 		},
 		components: {
