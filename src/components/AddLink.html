@@ -12,11 +12,11 @@
 	</label>
 	<label>
 		<span>Label</span>
-		<input ref:label />
+		<input ref:label bind:value="label"/>
 	</label>
 	<label>
 		<span>Url</span>
-		<input ref:url />
+		<input ref:url bind:value="url"/>
 	</label>
 </Dialog>
 
@@ -25,7 +25,9 @@
 	import store from '../store';
 
 	const initialData = {
-		collectionId: null
+		collectionId: null,
+		label: '',
+		url: '',
 	}
 
 	export default {
@@ -45,7 +47,16 @@
 				const collectionId = this.refs.collection.value;
 				const label = this.refs.label.value;
 				const url = this.refs.url.value;
-				this.store.addLink(collectionId, label, url);
+				const linkExists = this.store.get('links').find(link => link.url.toLowerCase() === url.toLowerCase());
+
+				let addLink = url !== '';
+				if (linkExists) {
+					if (!window.confirm(`Link ${url} already exists, still add?`)) {
+						addLink = false;
+					}
+				}
+				
+				addLink && this.store.addLink(collectionId, label, url);
 			},
 			onClose(action) {
 				if (action === 'confirm') {

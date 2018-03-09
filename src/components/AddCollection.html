@@ -12,7 +12,7 @@
 	</label>
 	<label>
 		<span>Title</span>
-		<input ref:title />
+		<input ref:title bind:value="title"/>
 	</label>
 </Dialog>
 
@@ -20,8 +20,15 @@
 	import store from '../store';
 	import Dialog from './Dialog.html';
 
+	const initialData = {
+		title: '',
+	}
+
 	export default {
 		store: () => store,
+		data() {
+			return initialData
+		},
 		components: {
 			Dialog,
 		},
@@ -32,12 +39,24 @@
 			add() {
 				const groupId = this.refs.group.value;
 				const title = this.refs.title.value;
-				this.store.addCollection(groupId, title);
+				const titleExists = this.store.get('collections').find(collection => collection.title.toLowerCase() === title.toLowerCase());
+
+				let addCollection = title !== '';
+				if (titleExists) {
+					if (!window.confirm(`Collection ${title} already exists, still add?`)) {
+						addCollection = false;
+					}
+				}
+				
+				addCollection && this.store.addCollection(groupId, title);
+				
 			},
 			onClose(action) {
 				if (action === 'confirm') {
 					this.add();
 				}
+
+				this.set(initialData);
 			}
 		}
 	}

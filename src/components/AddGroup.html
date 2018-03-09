@@ -4,7 +4,7 @@
 	on:close="onClose(event)">
 	<label>
 		<span>Title</span>
-		<input ref:title />
+		<input ref:title bind:value="inputValue"/>
 	</label>
 </Dialog>
 
@@ -12,8 +12,15 @@
 	import store from '../store';
 	import Dialog from './Dialog.html';
 
+	const initialData = {
+		inputValue: ''
+	}
+
 	export default {
 		store: () => store,
+		data() {
+			return initialData
+		},
 		components: {
 			Dialog,
 		},
@@ -23,12 +30,22 @@
 			},
 			add() {
 				const title = this.refs.title.value;
-				this.store.addGroup(title);
+				const titleExists = this.store.get('groups').find(group => group.title.toLowerCase() === title.toLowerCase());
+
+				let addGroup = title !== '';
+				if (titleExists) {
+					if (!window.confirm(`Group ${title} already exists, still add?`)) {
+						addGroup = false;
+					}
+				}
+				
+				addGroup && this.store.addGroup(title);
 			},
 			onClose(action) {
 				if (action === 'confirm') {
 					this.add();
 				}
+				this.set(initialData);
 			}
 		}
 	}
